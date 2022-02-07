@@ -154,7 +154,7 @@ export default function Marketplace() {
               
             }}
           >
-            Filter
+            FILTER
           </span>
         </div>
         <div className="sidebar-content filtercontent">

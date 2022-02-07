@@ -1,9 +1,9 @@
 export default function About() {
   return (
     <div className="m-4">
-      <h1 className="text-xl font-semibold">ONE World NFT</h1>
+      <h1 className="text-xl font-semibold">🗺 LUV NFT Estate</h1>
       <h2 className="text-md font-semibold">
-        ONE World is a collectible NFT marketplace for real-world locations on
+        LUV NFT Estate is a collectible NFT marketplace for real-world locations on
         planet Earth.
       </h2>
       <br />
@@ -61,15 +61,15 @@ export default function About() {
       <div>
         <a
           className="font-medium"
-          href="https://github.com/swapp1990/WorldNFT"
+          href="https://github.com/blkluv/luv-nft-estate"
           target="_blank"
         >
-          https://github.com/swapp1990/WorldNFT
+          https://github.com/blkluv/luv-nft-estate
         </a>
       </div>
       <br></br>
       <b>Email</b>
-      <div className="font-medium">swapp19902@gmail.com</div>
+      <div className="font-medium">info@luvnf.com</div>
     </div>
   );
 }

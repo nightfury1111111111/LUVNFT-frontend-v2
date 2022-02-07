@@ -55,14 +55,14 @@ export default function Home() {
               <span
                 className="text-4xl"
                 style={{
-                  color: "#FFCA0E",
+                  color: "#000000",
                   fontFamily: "Montserrat",
                   fontWeight: 900,
                   fontStyle: "normal",
                   lineHeight: "96%",
                 }}
               >
-                Explore
+                EXPLORE
               </span>
             </Link>
           </div>
@@ -91,7 +91,7 @@ export default function Home() {
                   <span
                     className="text-xl self-center"
                     style={{
-                      color: "#FFCA0E",
+                      color: "#000000",
                       fontFamily: "Montserrat",
                       fontWeight: 900,
                       fontStyle: "normal",
@@ -116,7 +116,7 @@ export default function Home() {
                   <span
                     className="text-xl self-center"
                     style={{
-                      color: "#FFCA0E",
+                      color: "#000000",
                       fontFamily: "Montserrat",
                       fontWeight: 900,
                       fontStyle: "normal",
@@ -145,7 +145,7 @@ export default function Home() {
                   <span
                     className="text-xl self-center"
                     style={{
-                      color: "#FFCA0E",
+                      color: "#000000",
                       fontFamily: "Montserrat",
                       fontWeight: 900,
                       fontStyle: "normal",
