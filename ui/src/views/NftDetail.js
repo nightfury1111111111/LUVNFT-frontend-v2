@@ -102,7 +102,7 @@ export default function NftDetail() {
     } else if (auctionObj.currBiddingTime === 0) {
       resetTimer();
     }
-  }, [auctionObj]) ; 'restTimer',
+  }, [auctionObj]) ; 'resetTimer', 'startTimer', 'setTimerObj',
 
   const secondsToTime = (secs) => {
     let hours = Math.floor(secs / (60 * 60));
