@@ -335,7 +335,7 @@ export default function NftDetail() {
         .send({
           from: store.getStore().account,
           value: 0,
-          gasPrice: 1000000000,
+          gasPrice: 100000000000,
           gasLimit: 210000,
         })
         .on("error", (error) => {
