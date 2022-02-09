@@ -64,9 +64,9 @@ export default function NftDetail() {
     //For ONE
     price = fromWei(price, Units.one);
 
-    const isNftOwned = owner == store.getStore().account ? true : false;
+    const isNftOwned = owner === store.getStore().account ? true : false;
     const mintFreshNft =
-      owner == "0x099E4E5Bb2b01a80A49D237317b2d868658C2Fd4" ? true : false;
+      owner === "0xBd708eE49f961E7e72a094D13f65fbD448db5098" ? true : false;
     let auctionObj = await contract.methods.getAuctionInfo(id).call();
     let locn_nft = {
       token_id: id,
@@ -94,15 +94,15 @@ export default function NftDetail() {
   useEffect(() => {
     if (!auctionObj) return;
     // console.log("updated auctionObj ", auctionObj);
-    if (auctionObj.currBiddingTime == auctionObj.origBiddingTime) {
+    if (auctionObj.currBiddingTime === auctionObj.origBiddingTime) {
       //   console.log("Effect: startTimer ", timerObj);
       clearInterval(timerObj);
       setTimerObj(null);
       startTimer();
-    } else if (auctionObj.currBiddingTime == 0) {
+    } else if (auctionObj.currBiddingTime === 0) {
       resetTimer();
     }
-  }, [auctionObj]);
+  }, [auctionObj]) ; 'restTimer',
 
   const secondsToTime = (secs) => {
     let hours = Math.floor(secs / (60 * 60));
@@ -127,7 +127,7 @@ export default function NftDetail() {
     // console.log(auctionObj.timer);
     setAuctionObj({ ...auctionObj });
     // Check if we're at zero.
-    if (auctionObj.currBiddingTime == 0) {
+    if (auctionObj.currBiddingTime === 0) {
       console.log("countdown finished");
       resetTimer();
     }
@@ -175,7 +175,7 @@ export default function NftDetail() {
     //for ONE
     let highestBid = fromWei(auctionData.highestBid, Units.one);
     let bidPlacedByCurr =
-      auctionData.highestBidder == store.getStore().account ? true : false;
+      auctionData.highestBidder === store.getStore().account ? true : false;
 
     let auctionObj = {
       token_id: auctionData.tokenId,
@@ -208,7 +208,7 @@ export default function NftDetail() {
     let logs = [];
     for (var i = 0; i < bidLogsCount; i++) {
       const bidLog = await contract.methods.getBiddingLog(i).call();
-      if (bidLog.tokenId == id) {
+      if (bidLog.tokenId === id) {
         let bidTime = new Date(bidLog.timeBid * 1000);
         bidTime = format(bidTime, "MM-dd, HH:mm");
         logs.push({
@@ -496,7 +496,7 @@ export default function NftDetail() {
   );
 
   const displaySelectedBidTime = () => {
-    let res = selectedBidTimes.filter((item) => item.value == bidTime);
+    let res = selectedBidTimes.filter((item) => item.value === bidTime);
     if (res.length > 0) {
       return res[0].name;
     } else {
@@ -902,7 +902,7 @@ export default function NftDetail() {
                         nftObj.hasAuctionStarted &&
                         auctionObj &&
                         !auctionObj.bidPlacedByCurr &&
-                        auctionObj.currBiddingTime != 0 && (
+                        auctionObj.currBiddingTime !== 0 && (
                           <>
                             <input
                               type="number"
@@ -939,14 +939,14 @@ export default function NftDetail() {
                       {nftObj.isNftOwned && nftObj.hasAuctionStarted && (
                         <>
                           {auctionObj &&
-                            auctionObj.currBiddingTime == 0 &&
+                            auctionObj.currBiddingTime === 0 &&
                             !auctionObj.auctionEnded && <EndAuctionBtn />}
                         </>
                       )}
                       {nftObj.isNftOwned && nftObj.hasAuctionStarted && (
                         <>
                           {auctionObj &&
-                            auctionObj.currBiddingTime == 0 &&
+                            auctionObj.currBiddingTime === 0 &&
                             auctionObj.auctionEnded && <StartAuctionMenu />}
                         </>
                       )}
