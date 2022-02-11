@@ -64,9 +64,9 @@ export default function NftDetail() {
     //For ONE
     price = fromWei(price, Units.one);
 
-    const isNftOwned = owner === store.getStore().account ? true : false;
+    const isNftOwned = owner == store.getStore().account ? true : false;
     const mintFreshNft =
-      owner === "0xBd708eE49f961E7e72a094D13f65fbD448db5098" ? true : false;
+      owner == "0x099E4E5Bb2b01a80A49D237317b2d868658C2Fd4" ? true : false;
     let auctionObj = await contract.methods.getAuctionInfo(id).call();
     let locn_nft = {
       token_id: id,
@@ -94,15 +94,15 @@ export default function NftDetail() {
   useEffect(() => {
     if (!auctionObj) return;
     // console.log("updated auctionObj ", auctionObj);
-    if (auctionObj.currBiddingTime === auctionObj.origBiddingTime) {
+    if (auctionObj.currBiddingTime == auctionObj.origBiddingTime) {
       //   console.log("Effect: startTimer ", timerObj);
       clearInterval(timerObj);
       setTimerObj(null);
       startTimer();
-    } else if (auctionObj.currBiddingTime === 0) {
+    } else if (auctionObj.currBiddingTime == 0) {
       resetTimer();
     }
-  }, [auctionObj]) ; 'resetTimer', 'startTimer', 'setTimerObj',
+  }, [auctionObj]);
 
   const secondsToTime = (secs) => {
     let hours = Math.floor(secs / (60 * 60));
@@ -127,7 +127,7 @@ export default function NftDetail() {
     // console.log(auctionObj.timer);
     setAuctionObj({ ...auctionObj });
     // Check if we're at zero.
-    if (auctionObj.currBiddingTime === 0) {
+    if (auctionObj.currBiddingTime == 0) {
       console.log("countdown finished");
       resetTimer();
     }
@@ -175,7 +175,7 @@ export default function NftDetail() {
     //for ONE
     let highestBid = fromWei(auctionData.highestBid, Units.one);
     let bidPlacedByCurr =
-      auctionData.highestBidder === store.getStore().account ? true : false;
+      auctionData.highestBidder == store.getStore().account ? true : false;
 
     let auctionObj = {
       token_id: auctionData.tokenId,
@@ -208,7 +208,7 @@ export default function NftDetail() {
     let logs = [];
     for (var i = 0; i < bidLogsCount; i++) {
       const bidLog = await contract.methods.getBiddingLog(i).call();
-      if (bidLog.tokenId === id) {
+      if (bidLog.tokenId == id) {
         let bidTime = new Date(bidLog.timeBid * 1000);
         bidTime = format(bidTime, "MM-dd, HH:mm");
         logs.push({
@@ -335,7 +335,7 @@ export default function NftDetail() {
         .send({
           from: store.getStore().account,
           value: 0,
-          gasPrice: 100000000000,
+          gasPrice: 1000000000,
           gasLimit: 210000,
         })
         .on("error", (error) => {
@@ -434,7 +434,7 @@ export default function NftDetail() {
       style={{
         height: "40px",
         width: "150px",
-        color: "#FFCA0E",
+        color: "#DC1FFF",
         border: "1px solid #000000",
         borderRadius: "15px 15px 15px 15px",
         fontSize: "15px",
@@ -465,7 +465,7 @@ export default function NftDetail() {
         style={{
           height: "40px",
           width: "200px",
-          color: "#FFCA0E",
+          color: "#DC1FFF",
           border: "1px solid #000000",
           borderRadius: "10px 10px 10px 10px",
           fontSize: "15px",
@@ -481,7 +481,7 @@ export default function NftDetail() {
         style={{
           height: "40px",
           width: "200px",
-          color: "#FFCA0E",
+          color: "#DC1FFF",
           border: "1px solid #000000",
           borderRadius: "10px 10px 10px 10px",
           fontSize: "15px",
@@ -496,7 +496,7 @@ export default function NftDetail() {
   );
 
   const displaySelectedBidTime = () => {
-    let res = selectedBidTimes.filter((item) => item.value === bidTime);
+    let res = selectedBidTimes.filter((item) => item.value == bidTime);
     if (res.length > 0) {
       return res[0].name;
     } else {
@@ -602,7 +602,7 @@ export default function NftDetail() {
         style={{
           height: "40px",
           width: "150px",
-          color: "#FFCA0E",
+          color: "#DC1FFF",
           border: "1px solid #000000",
           borderRadius: "0px 17.5735px 17.5735px 0px",
           fontSize: "15px",
@@ -644,7 +644,7 @@ export default function NftDetail() {
       style={{
         height: "40px",
         width: "150px",
-        color: "#FFCA0E",
+        color: "#DC1FFF",
         border: "1px solid #000000",
         borderRadius: "0px 17.5735px 17.5735px 0px",
         fontSize: "18px",
@@ -659,30 +659,30 @@ export default function NftDetail() {
 
   const styles = {
     entryLabel: {
-      color: "#828282",
+      color: "#000000",
       fontWeight: 600,
       fontSize: "20px",
     },
     entryDesc: {
-      color: "#828282",
+      color: "#000000",
       fontWeight: 400,
       fontSize: "20px",
       lineHeight: "20px",
     },
     sectionLabel: {
-      color: "#828282",
+      color: "#000000",
       fontWeight: 600,
       fontSize: "22px",
       lineHeight: "20px",
     },
     auctionTimeNumber: {
-      color: "#FF881B",
+      color: "#00FFA3",
       fontWeight: 600,
       fontSize: "24px",
       lineHeight: "24px",
     },
     auctionTimeDesc: {
-      color: "#828282",
+      color: "#000000",
       fontWeight: 600,
       fontSize: "20px",
     },
@@ -733,13 +733,13 @@ export default function NftDetail() {
                   <div className="" style={{ minWidth: "50%", height: "100%" }}>
                     <div
                       className="flex justify-between"
-                      style={{ height: "10%", marginBottom: "20px"}}
+                      style={{ height: "10%", marginBottom: "20px" }}
                     >
                       <div className="ml-2">
                         <span
                           className="uppercase"
                           style={{
-                            color: "#FFCA0E",
+                            color: "#DC1FFF",
                             fontWeight: 600,
                             fontSize: "30px",
                           }}
@@ -747,22 +747,26 @@ export default function NftDetail() {
                           {nftObj.name}
                         </span>
                       </div>
-                      <div className="mr-2 flex flex-row">
+                      <div
+                        className="mr-2 flex flex-row"
+                        style={{ fontSize: "22px" }}
+                      >
                         <span
                           style={{
-                            color: "#828282",
+                            color: "#000000",
                             fontWeight: 600,
                             fontSize: "22px",
                           }}
                         >
                           23&nbsp;
                         </span>
-                        <Iconly
+                        {/* <Iconly
                           name="Heart2"
                           set="two-tone"
                           primaryColor="red"
                           size="large"
-                        />
+                        /> */}
+                        💜
                       </div>
                     </div>
                     <div
@@ -772,7 +776,7 @@ export default function NftDetail() {
                       <div className="ml-2">
                         <span
                           style={{
-                            color: "#828282",
+                            color: "#000000",
                             fontWeight: 600,
                             fontSize: "20px",
                           }}
@@ -780,22 +784,26 @@ export default function NftDetail() {
                           Owned by <b>{nftObj.owner_fmt}</b>
                         </span>
                       </div>
-                      <div className="mr-2 flex flex-row">
+                      <div
+                        className="mr-2 flex flex-row"
+                        style={{ fontSize: "22px" }}
+                      >
                         <span
                           style={{
-                            color: "#828282",
+                            color: "#000000",
                             fontWeight: 600,
                             fontSize: "22px",
                           }}
                         >
                           50&nbsp;
                         </span>
-                        <Iconly
+                        {/* <Iconly
                           name="Show"
                           set="two-tone"
                           primaryColor="black"
                           size="large"
-                        />
+                        /> */}
+                        👁
                       </div>
                     </div>
                     <div
@@ -804,7 +812,7 @@ export default function NftDetail() {
                     >
                       <span
                         style={{
-                          color: "#828282",
+                          color: "#000000",
                           fontWeight: 400,
                           fontSize: "18px",
                         }}
@@ -825,7 +833,7 @@ export default function NftDetail() {
                         <div>
                           <span
                             style={{
-                              color: "#FF881B",
+                              color: "#00FFA3",
                               fontWeight: 600,
                               fontSize: "24px",
                               lineHeight: "24px",
@@ -835,17 +843,17 @@ export default function NftDetail() {
                           </span>
                           <span
                             style={{
-                              color: "#828282",
+                              color: "#000000",
                               fontWeight: 600,
                               fontSize: "24px",
                               lineHeight: "24px",
                             }}
                           >
-                            ONE&nbsp;
+                            $USD&nbsp;
                           </span>
                           <span
                             style={{
-                              color: "#FFCA0E",
+                              color: "#DC1FFF",
                               fontWeight: 600,
                               fontSize: "20px",
                               lineHeight: "24px",
@@ -902,7 +910,7 @@ export default function NftDetail() {
                         nftObj.hasAuctionStarted &&
                         auctionObj &&
                         !auctionObj.bidPlacedByCurr &&
-                        auctionObj.currBiddingTime !== 0 && (
+                        auctionObj.currBiddingTime != 0 && (
                           <>
                             <input
                               type="number"
@@ -939,14 +947,14 @@ export default function NftDetail() {
                       {nftObj.isNftOwned && nftObj.hasAuctionStarted && (
                         <>
                           {auctionObj &&
-                            auctionObj.currBiddingTime === 0 &&
+                            auctionObj.currBiddingTime == 0 &&
                             !auctionObj.auctionEnded && <EndAuctionBtn />}
                         </>
                       )}
                       {nftObj.isNftOwned && nftObj.hasAuctionStarted && (
                         <>
                           {auctionObj &&
-                            auctionObj.currBiddingTime === 0 &&
+                            auctionObj.currBiddingTime == 0 &&
                             auctionObj.auctionEnded && <StartAuctionMenu />}
                         </>
                       )}
@@ -955,12 +963,8 @@ export default function NftDetail() {
                 </div>
               </div>
             </div>
-            <div
-              className="flex flex-row p-4 infos nftdetail"
-            >
-              <div
-                className="flex flex-col ml-2 mt-4 pr-12 description"
-              >
+            <div className="flex flex-row p-4 infos nftdetail">
+              <div className="flex flex-col ml-2 mt-4 pr-12 description">
                 <span style={styles.entryLabel}>Mint Description:</span>
                 <span style={styles.entryDesc}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -983,9 +987,7 @@ export default function NftDetail() {
                   opacity: "0.2",
                 }}
               ></span>
-              <div
-                className="mt-4 ml-4 pl-4 bidinfo"
-              >
+              <div className="mt-4 ml-4 pl-4 bidinfo">
                 <span style={styles.sectionLabel}>Bid Logs</span>
                 <BidsLog />
               </div>
