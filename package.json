@@ -36,17 +36,14 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
     "redux": "^4.1.0",
+    "styled-components": "^5.3.3",
     "web3": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "watch:css": "postcss src/styles/tailwind.css -o src/styles/output.css",
-    "build:css": "postcss src/styles/tailwind.css -o src/styles/output.css",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm run build:tailwind && npm start",
-    "build:tailwind": "tailwind build src/assets/styles/index.css -o src/assets/styles/tailwind.css"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
