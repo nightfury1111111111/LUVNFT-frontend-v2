@@ -10,9 +10,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useParams,
-  useRouteMatch,
 } from "react-router-dom";
 
 import Header from "components/header.js";
@@ -25,8 +22,8 @@ import World from "views/World";
 
 import Store from "./stores/store";
 import Marketplace from "views/Marketplace";
-const store = Store.store;
-const emitter = Store.emitter;
+// const store = Store.store;
+// const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
 
 const GlobalStyle = createGlobalStyle`

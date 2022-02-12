@@ -1,7 +1,7 @@
 //Initialize harmony contract: https://github.com/harmony-one/sdk/tree/master/packages/harmony-contract
 
-import React, { createContext, useReducer } from "react";
-import fs from "fs";
+// import React, { createContext, useReducer } from "react";
+// import fs from "fs";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
 // import LocationNFT from "../abi/LocationNFT.json";

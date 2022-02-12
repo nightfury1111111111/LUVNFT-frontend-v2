@@ -4,14 +4,10 @@
   display: block;
 }
 
-.home {
-  font-family: "Montserrat", sans-serif;
-}
-
 .nftmenu {
   width: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 

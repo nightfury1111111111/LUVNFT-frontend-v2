@@ -6,7 +6,7 @@ import logo from "../assets/img/luv-nft-estate_logo_59_06.png";
 
 const store = Store.store;
 const emitter = Store.emitter;
-const dispatcher = Store.dispatcher;
+// const dispatcher = Store.dispatcher;
 
 const HeaderWrapper = styled.nav`
   background: #171717;
@@ -58,7 +58,7 @@ export default function Header() {
       className={"flex items-center justify-between flex-wrap p-2"}
     >
       <div className="ml-8">
-        <img src={logo} />
+        <img src={logo} alt="logo"/>
       </div>
       <NavWrapper className="flex flex-row">
         {accountFmt ? (
