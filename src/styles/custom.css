@@ -4,10 +4,14 @@
   display: block;
 }
 
+.home {
+  font-family: "Montserrat", sans-serif;
+}
+
 .nftmenu {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
 }
 
@@ -71,7 +75,7 @@
 @media only screen and (max-width: 650px) {
   .nftitem {
     width: 240px;
-    height: 320px;
+    height: 350px;
   }
 }
 
@@ -91,9 +95,7 @@
 
 @media only screen and (max-width: 650px) {
   .filterbar {
-    background-color: rgba(196, 196, 196, 0);
     width: 100%;
-    display: flex;
     flex-direction: row;
     justify-content: space-between;
   }
