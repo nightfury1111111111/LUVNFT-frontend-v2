@@ -16,6 +16,7 @@ import {
   numToStr,
 } from "@harmony-js/utils";
 import { compareAsc, format } from "date-fns";
+import styled from "styled-components";
 import { Iconly } from "react-iconly";
 
 import * as common from "../utils/common";
@@ -24,6 +25,56 @@ import Store from "../stores/store";
 const store = Store.store;
 const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
+
+const MainIntroWrapper = styled.div`
+  height: 100%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: flex;
+    flex-direction: column;
+    margin-left: 0;
+    margin-right: 20px;
+  }
+`;
+
+const NftInfoWrapper = styled.div`
+  width: 60%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+  }
+`;
+
+const NftDetailWrapper = styled.div`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+const NftPicWrapper = styled.div`
+  width: 40%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+    margin-bottom: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background:
+      radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%);
+    height: 100%;
+  }
+`;
+
+const DescriptionWrapper = styled.div`
+  width: 55%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+  }
+`;
+
+const BidLogWrapper = styled.div`
+  width: 45%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+  }
+`;
 
 export default function NftDetail() {
   let { id } = useParams();
@@ -521,9 +572,9 @@ export default function NftDetail() {
         </svg>
       </button>
       <ul className="dropdown-menu absolute hidden text-gray-700 pt-1 bg-gray-100">
-        {selectedBidTimes.map((bdt) => {
+        {selectedBidTimes.map((bdt,id) => {
           return (
-            <li className="">
+            <li key={id}>
               <a
                 className="rounded-t hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap"
                 onClick={() => {
@@ -708,28 +759,15 @@ export default function NftDetail() {
         {nftObj && (
           <>
             <div className="">
-              <div
-                className="ml-8 mr-8 mt-4 flex flex-row mainintro"
-                style={{ height: "100%" }}
-              >
-                <div className="nftpic">
-                  <div
-                    className="flex justify-center items-center cursor-pointer rounded-lg"
-                    style={{
-                      boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                      background:
-                        "radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%)",
-                      height: "100%",
-                    }}
-                  >
-                    {nftObj && (
-                      <div
-                        dangerouslySetInnerHTML={{ __html: nftObj.svg_image }}
-                      ></div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-col pl-4 nftinfo">
+              <MainIntroWrapper className="ml-8 mr-8 mt-4 flex flex-row">
+                <NftPicWrapper className="flex justify-center items-center cursor-pointer rounded-lg">
+                  {nftObj && (
+                    <div
+                      dangerouslySetInnerHTML={{ __html: nftObj.svg_image }}
+                    ></div>
+                  )}
+                </NftPicWrapper>
+                <NftInfoWrapper className="flex flex-col pl-4">
                   <div className="" style={{ minWidth: "50%", height: "100%" }}>
                     <div
                       className="flex justify-between"
@@ -964,11 +1002,11 @@ export default function NftDetail() {
                       )}
                     </div>
                   </div>
-                </div>
-              </div>
+                </NftInfoWrapper>
+              </MainIntroWrapper>
             </div>
-            <div className="flex flex-row p-4 infos nftdetail">
-              <div className="flex flex-col ml-2 mt-4 pr-12 description">
+            <NftDetailWrapper className="flex flex-row p-4">
+              <DescriptionWrapper className="flex flex-col ml-2 mt-4 pr-12">
                 <span style={styles.entryLabel}>Mint Description:</span>
                 <span style={styles.entryDesc}>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -982,7 +1020,7 @@ export default function NftDetail() {
                 <br />
                 <span style={styles.entryLabel}>Token ID:</span>
                 <span style={styles.entryDesc}>xxxxxx</span>
-              </div>
+              </DescriptionWrapper>
               <span
                 style={{
                   border: "1px solid #000000",
@@ -991,11 +1029,11 @@ export default function NftDetail() {
                   opacity: "0.2",
                 }}
               ></span>
-              <div className="mt-4 ml-4 pl-4 bidinfo">
+              <BidLogWrapper className="mt-4 ml-4 pl-4">
                 <span style={styles.sectionLabel}>Bid Logs</span>
                 <BidsLog />
-              </div>
-            </div>
+              </BidLogWrapper>
+            </NftDetailWrapper>
           </>
         )}
       </div>

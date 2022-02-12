@@ -102,7 +102,7 @@ export default function Home() {
           </ExploreWrapper>
         </div>
         <hr />
-        <div className="flex flex-col mb-5">
+        <div className="flex flex-col mb-10">
           <div className="px-8 mt-4 flex justify-center mb-4">
             <span className="text-4xl font-semibold">👀 BY</span>
           </div>

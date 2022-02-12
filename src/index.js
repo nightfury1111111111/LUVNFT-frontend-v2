@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 
 import "./styles/output.css";
-import "./styles/custom.css";
 import theme from "./theme";
 
 import {
