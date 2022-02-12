@@ -23,7 +23,7 @@ const hmy = new Harmony("https://api.s0.b.hmny.io", {
   chainId: ChainID.HmyTestnet,
 });
 
-const HMY_PRIVATE_KEY = process.env.HMY_PRIVATE_KEY;
+const HMY_PRIVATE_KEY = process.env.REACT_APP_HMY_PRIVATE_KEY;
 const HMY_RPC_URL = "https://api.s0.b.hmny.io";
 
 class Store {

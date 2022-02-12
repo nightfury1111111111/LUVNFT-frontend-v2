@@ -1,13 +1,34 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
-import "./header.css";
+import styled, { useTheme } from "styled-components";
 import Store from "../stores/store";
 import logo from "../assets/img/luv-nft-estate_logo_59_06.png";
 
 const store = Store.store;
 const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
+
+const HeaderWrapper = styled.nav`
+  background: #171717;
+  font-family: Poppins;
+  box-shadow: 0px 5px 10px 3px rgba(0, 0, 0, 0.25);
+  z-index: 100;
+  line-height: 1;
+  display: flex;
+  flex-direction: row;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    flex-direction: column;
+  }
+`;
+
+const NavWrapper = styled.div`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+`;
 
 class Header extends Component {
   constructor(props) {
@@ -22,16 +43,7 @@ class Header extends Component {
     return addr.substring(0, 6) + "..." + addr.substring(len - 5, len);
   }
 
-  //   storeUpdated() {
-  //     let accountAddress = store.getStore().account;
-  //     console.log(accountAddress);
-  //     if (accountAddress) {
-  //       this.setState({ accountFmt: this.getCompressed(accountAddress) });
-  //     }
-  //   }
-
   async componentWillMount() {
-    console.log("Header ", this.props);
     const storeUpdated = async () => {
       let accountAddress = store.getStore().account;
       if (accountAddress) {
@@ -48,20 +60,13 @@ class Header extends Component {
 
   render() {
     return (
-      <nav
-        className={
-          "flex items-center justify-between flex-wrap p-2 myHeader headerlayout"
-        }
+      <HeaderWrapper
+        className={"flex items-center justify-between flex-wrap p-2"}
       >
-        <div className="flex flex-row items-center mr-6 logoContent">
-          {/* <div className="logopart2">
-            <div>LUV</div>
-            <div>NFT</div>
-          </div>
-          <div className="logopart1">ESTATE</div> */}
+        <div className="ml-8">
           <img src={logo} />
         </div>
-        <div className="flex flex-row headerinfo">
+        <NavWrapper className="flex flex-row">
           {this.state.accountFmt ? (
             <span className="p-4 font-bold text-white">
               {this.state.accountFmt}
@@ -85,8 +90,8 @@ class Header extends Component {
           >
             🤔
           </Link>
-        </div>
-      </nav>
+        </NavWrapper>
+      </HeaderWrapper>
     );
   }
 }

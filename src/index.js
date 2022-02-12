@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
+import { ThemeProvider, createGlobalStyle } from "styled-components";
 
 import "./styles/output.css";
 import "./styles/custom.css";
+import theme from "./theme";
 
 import {
   BrowserRouter as Router,
@@ -27,6 +29,12 @@ const store = Store.store;
 const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
 
+const GlobalStyle = createGlobalStyle`
+  body {
+    font-family: "Archivo Black"
+  }
+`;
+
 function App() {
   useEffect(() => {
     // Some initialization logic here
@@ -34,28 +42,31 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Header />
-      <div>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/market">
-            <Marketplace />
-          </Route>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/nft/:id">
-            <NftDetail />
-          </Route>
-          <Route path="/world">
-            <World />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Header />
+        <div>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/market">
+              <Marketplace />
+            </Route>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route path="/nft/:id">
+              <NftDetail />
+            </Route>
+            <Route path="/world">
+              <World />
+            </Route>
+          </Switch>
+        </div>
+      </Router>
+      <GlobalStyle />
+    </ThemeProvider>
   );
 }
 ReactDOM.render(<App />, document.getElementById("root"));
