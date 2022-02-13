@@ -10,8 +10,15 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 
-import { country_icon_svg, city_icon_svg, landmark_icon_svg } from "./icons";
+import country_icon_svg from "../assets/img/country.svg";
+import city_icon_svg from "../assets/img/city.svg";
+import landmark_icon_svg from "../assets/img/landmark.svg";
+import homePic from "../assets/img/home-m-2022.02.10-21_27_53.png";
+import salePic from "../assets/img/home.png";
+import stadiumPic from "../assets/img/stadium.png";
 import countryPic from "../assets/img/country.png";
+import statusPic from "../assets/img/status.png";
+import hotelPic from "../assets/img/luv-hotel.png";
 import cityPic from "../assets/img/city.png";
 import landmarkPic from "../assets/img/landmark.png";
 
@@ -27,18 +34,22 @@ const BannerWrapper = styled.div`
   ${({ theme }) => theme.mediaQueries.sm} {
     flex-direction: column;
     justify-content: flex-start;
-    height:420px;
+    height: 420px;
   }
 `;
 
 const VideoWrapper = styled.div`
-  border: solid black;
   width: 50%;
   height: 100%;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
     height: 330px;
   }
+`;
+
+const IframeWrapper=styled.iframe`
+  height: 100%;
+  width: 100%;
 `;
 
 const TitleWrapper = styled.div`
@@ -49,8 +60,8 @@ const TitleWrapper = styled.div`
   margin-left: 40px;
   margin-top: 40px;
   ${({ theme }) => theme.mediaQueries.sm} {
-    margin-left:0;
-    margin-top:0;
+    margin-left: 0;
+    margin-top: 0;
   }
 `;
 
@@ -64,24 +75,46 @@ const ExploreWrapper = styled(Link)`
   font-size: 45px;
   width: 100px;
   text-align: center;
-  margin-left:56px;
+  margin-left: 56px;
   ${({ theme }) => theme.mediaQueries.sm} {
-    width:90%;
-    margin:auto;
+    width: 90%;
+    margin: auto;
   }
 `;
 
-const CardWrapper = styled.div`
+const CardBoxWrapper = styled.div`
   width: 90%;
   display: flex;
   flex-direction: row;
   align-items: center;
   overflow: auto;
   justify-content: flex-start;
-  margin:auto;
+  margin: auto;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
   }
+`;
+
+const CardLinkWrapper = styled(Link)`
+  height: 260px;
+  box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
+`;
+//same as CardLinkWrapper(will be deleted)
+const CardDivWrapper = styled.div`
+  height: 260px;
+  box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
+`;
+
+const BackgroundWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 220px;
+  background-color: black;
+  height: 80%;
+  background-image: url(${(props) => props.bgPath});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 `;
 
 export default function Home() {
@@ -93,7 +126,15 @@ export default function Home() {
           <div>OWN A PART OF</div>
           <div>THE METAVERSE</div>
         </TitleWrapper>
-        <VideoWrapper></VideoWrapper>
+        <VideoWrapper>
+          <IframeWrapper
+            src={`https://youtu.be/wTYi2W18REE`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Embedded youtube"
+          />
+        </VideoWrapper>
       </BannerWrapper>
       <div className="flex flex-col">
         <div className="flex flex-col justify-start mb-2">
@@ -107,104 +148,13 @@ export default function Home() {
             <span className="text-4xl font-semibold">👀 BY</span>
           </div>
 
-          <CardWrapper className="px-8 flex flex-row w-100 justify-center space-x-8">
-            <div
-              className="rounded-lg flex flex-col cursor-pointer nftitem"
-              style={{
-                width: "300px",
-                height: "250px",
-                boxShadow: "0px 2px 4px rgba(255, 0, 0, 0.25)",
-              }}
-            >
-              <div
-                className="bg-purple-400 m-2 mb-0"
-                style={{
-                  height: "80%",
-                  backgroundImage: `url(${countryPic})`,
-                }}
-              >
-                {country_icon_svg}
-                {/* <img src={countryPic} /> */}
-              </div>
+          <CardBoxWrapper className="px-8 flex flex-row w-100 justify-center space-x-8">
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper className="m-2 mb-0">
+                <img src={salePic} />
+              </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏠
-                </span>
-              </div>
-            </div>
-            <Link
-              to={`/market`}
-              className="rounded-lg flex flex-col cursor-pointer nftitems"
-            >
-              <div className="bg-purple-400 m-2 mb-0" style={{ height: "80%" }}>
-                {city_icon_svg}
-              </div>
-              <div className="flex justify-center" style={{ height: "20%" }}>
-                <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏩
-                </span>
-              </div>
-            </Link>
-            <div
-              className="rounded-lg flex flex-col cursor-pointer"
-              style={{
-                width: "300px",
-                height: "250px",
-                boxShadow: "0px 2px 4px rgba(255, 0, 0, 0.25)",
-              }}
-            >
-              <div className="bg-purple-400 m-2 mb-0" style={{ height: "80%" }}>
-                {landmark_icon_svg}
-              </div>
-              <div className="flex justify-center" style={{ height: "20%" }}>
-                <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🗽
-                </span>
-              </div>
-            </div>
-            <div
-              className="rounded-lg flex flex-col cursor-pointer"
-              style={{
-                width: "300px",
-                height: "250px",
-                boxShadow: "0px 2px 4px rgba(255, 0, 0, 0.25)",
-              }}
-            >
-              <div className="bg-purple-400 m-2 mb-0" style={{ height: "80%" }}>
-                {landmark_icon_svg}
-              </div>
-              <div className="flex justify-center" style={{ height: "20%" }}>
-                <span
+                {/* <span
                   className="text-xl self-center"
                   style={{
                     color: "#FFCA0E",
@@ -216,22 +166,81 @@ export default function Home() {
                   }}
                 >
                   🏬
-                </span>
+                </span> */}
               </div>
-            </div>
-            <div
-              className="rounded-lg flex flex-col cursor-pointer"
-              style={{
-                width: "300px",
-                height: "250px",
-                boxShadow: "0px 2px 4px rgba(255, 0, 0, 0.25)",
-              }}
-            >
-              <div className="bg-purple-400 m-2 mb-0" style={{ height: "80%" }}>
-                {landmark_icon_svg}
-              </div>
+            </CardDivWrapper>
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper bgPath={country_icon_svg} className="m-2 mb-0">
+                <img src={homePic} />
+              </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                <span
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
+                >
+                  🏠
+                </span> */}
+              </div>
+            </CardDivWrapper>
+            <CardLinkWrapper
+              to={`/market`}
+              className="rounded-lg flex flex-col cursor-pointer"
+            >
+              <BackgroundWrapper bgPath={city_icon_svg} className="m-2 mb-0">
+                <img src={hotelPic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
+                >
+                  🏩
+                </span> */}
+              </div>
+            </CardLinkWrapper>
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper
+                bgPath={landmark_icon_svg}
+                className="m-2 mb-0"
+              >
+                <img src={statusPic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
+                >
+                  🗽
+                </span> */}
+              </div>
+            </CardDivWrapper>
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper className="m-2 mb-0">
+                <img src={stadiumPic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
                   className="text-xl self-center"
                   style={{
                     color: "#FFCA0E",
@@ -243,10 +252,10 @@ export default function Home() {
                   }}
                 >
                   🏟
-                </span>
+                </span> */}
               </div>
-            </div>
-          </CardWrapper>
+            </CardDivWrapper>
+          </CardBoxWrapper>
         </div>
       </div>
     </div>

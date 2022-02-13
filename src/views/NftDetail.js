@@ -28,6 +28,7 @@ const dispatcher = Store.dispatcher;
 
 const MainIntroWrapper = styled.div`
   height: 100%;
+  font-family: "Poppins";
   ${({ theme }) => theme.mediaQueries.sm} {
     display: flex;
     flex-direction: column;
@@ -52,18 +53,19 @@ const NftDetailWrapper = styled.div`
 
 const NftPicWrapper = styled.div`
   width: 40%;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background:
+    radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%);
+  height: 100%;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
     margin-bottom: 10px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    background:
-      radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%);
-    height: 100%;
   }
 `;
 
 const DescriptionWrapper = styled.div`
   width: 55%;
+  font-family:"Poppins";
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
   }
