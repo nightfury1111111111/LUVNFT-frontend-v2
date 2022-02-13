@@ -1,7 +1,7 @@
 //Initialize harmony contract: https://github.com/harmony-one/sdk/tree/master/packages/harmony-contract
 
-import React, { createContext, useReducer } from "react";
-import fs from "fs";
+// import React, { createContext, useReducer } from "react";
+// import fs from "fs";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
 // import LocationNFT from "../abi/LocationNFT.json";
@@ -23,7 +23,7 @@ const hmy = new Harmony("https://api.s0.b.hmny.io", {
   chainId: ChainID.HmyTestnet,
 });
 
-const HMY_PRIVATE_KEY = process.env.HMY_PRIVATE_KEY;
+const HMY_PRIVATE_KEY = process.env.REACT_APP_HMY_PRIVATE_KEY;
 const HMY_RPC_URL = "https://api.s0.b.hmny.io";
 
 class Store {

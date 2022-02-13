@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import ReactPlayer from "react-player/youtube";
+import styled from "styled-components";
 
 import {
   Link,
@@ -8,146 +10,251 @@ import {
   useRouteMatch,
 } from "react-router-dom";
 
-import { country_icon_svg, city_icon_svg, landmark_icon_svg } from "./icons";
+import country_icon_svg from "../assets/img/country.svg";
+import city_icon_svg from "../assets/img/city.svg";
+import landmark_icon_svg from "../assets/img/landmark.svg";
+import homePic from "../assets/img/home-m-2022.02.10-21_27_53.png";
+import salePic from "../assets/img/home.png";
+import stadiumPic from "../assets/img/stadium.png";
+import statusPic from "../assets/img/status.png";
+import hotelPic from "../assets/img/luv-hotel.png";
+
+const BannerWrapper = styled.div`
+  width: 100%;
+  height: 340px;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 420px;
+  }
+`;
+
+const VideoWrapper = styled.div`
+  width: 50%;
+  height: 100%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+    height: 330px;
+  }
+`;
+
+const IframeWrapper=styled.iframe`
+  height: 100%;
+  width: 100%;
+`;
+
+const TitleWrapper = styled.div`
+  font-size: 30px;
+  color: #dc1fff;
+  display: flex;
+  flex-direction: column;
+  margin-left: 40px;
+  margin-top: 40px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    margin-left: 0;
+    margin-top: 0;
+  }
+`;
+
+const ExploreWrapper = styled(Link)`
+  background: #000000;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  z-index: 10;
+  color: #ffffff;
+  line-height: 96%;
+  font-size: 45px;
+  width: 100px;
+  text-align: center;
+  margin-left: 56px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 90%;
+    margin: auto;
+  }
+`;
+
+const CardBoxWrapper = styled.div`
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: auto;
+  justify-content: flex-start;
+  margin: auto;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+  }
+`;
+
+const CardLinkWrapper = styled(Link)`
+  height: 260px;
+  box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
+`;
+//same as CardLinkWrapper(will be deleted)
+const CardDivWrapper = styled.div`
+  height: 260px;
+  box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
+`;
+
+const BackgroundWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 220px;
+  background-color: black;
+  height: 80%;
+  background-image: url(${(props) => props.bgPath});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+`;
 
 export default function Home() {
   let { path, url } = useRouteMatch();
   return (
-    <>
-      {/* <Marketplace /> */}
-      <div className="home">
-        <img
-          src="https://static.overlay-tech.com/assets/eeb0c8c9-6927-4067-ba89-cc331844f560.svg"
-          width="800px"
-          height="600px"
-          className="map"
-        ></img>
-        <div className="flex flex-col">
-          <div className="flex flex-col m-4 mt-12 banner">
-            <div className="earthsvg">
-              <div style={{ fontSize: "28px" }}>OWN A PART OF</div>
-              <div style={{ fontSize: "38px" }}>THE METAVERSE</div>
-            </div>
+    <div>
+      <BannerWrapper>
+        <TitleWrapper>
+          <div>OWN A PART OF</div>
+          <div>THE METAVERSE</div>
+        </TitleWrapper>
+        <VideoWrapper>
+          <IframeWrapper
+            src={`https://youtu.be/wTYi2W18REE`}
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+            title="Embedded youtube"
+          />
+        </VideoWrapper>
+      </BannerWrapper>
+      <div className="flex flex-col">
+        <div className="flex flex-col justify-start mb-2">
+          <ExploreWrapper to={`/market`} className="rounded p-1 mb-2">
+            <span className="text-4xl">🗺</span>
+          </ExploreWrapper>
+        </div>
+        <hr />
+        <div className="flex flex-col mb-10">
+          <div className="px-8 mt-4 flex justify-center mb-4">
+            <span className="text-4xl font-semibold">👀 BY</span>
           </div>
-          <div className="flex justify-start mb-2">
-            <Link
-              to={`/market`}
-              className="rounded p-4 mr-2 ml-8 mb-2"
-              style={{
-                background: "#000000",
-                boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-                borderRadius: "90px",
-                zIndex: 10,
-              }}
-            >
-              <span
-                className="text-4xl"
-                style={{
-                  color: "#FFFFFF",
-                  fontFamily: "Montserrat",
-                  fontWeight: 900,
-                  fontStyle: "normal",
-                  lineHeight: "96%",
-                }}
-              >
-                Explore
-              </span>
-            </Link>
-          </div>
-          <hr />
-          <div className="flex flex-col">
-            <div className="px-8 mt-4 flex justify-center">
-              <span className="text-4xl font-semibold">Browse By</span>
-            </div>
 
-            <div className="px-8 mt-4 flex flex-row w-100 justify-center space-x-8 nftmenu">
-              <div
-                className="rounded-lg flex flex-col cursor-pointer nftitem"
-                style={{
-                  width: "300px",
-                  height: "250px",
-                  boxShadow: "0px 2px 4px rgba(255, 0, 0, 0.25)",
-                }}
-              >
-                <div
-                  className="bg-purple-400 m-2 mb-0"
-                  style={{ height: "80%" }}
+          <CardBoxWrapper className="px-8 flex flex-row w-100 justify-center space-x-8">
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper className="m-2 mb-0">
+                <img src={salePic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
                 >
-                  {country_icon_svg}
-                </div>
-                <div className="flex justify-center" style={{ height: "20%" }}>
-                  <span
-                    className="text-xl self-center"
-                    style={{
-                      color: "#FFCA0E",
-                      fontFamily: "Montserrat",
-                      fontWeight: 900,
-                      fontStyle: "normal",
-                      lineHeight: "96%",
-                    }}
-                  >
-                    COUNTRY
-                  </span>
-                </div>
+                  🏬
+                </span> */}
               </div>
-              <Link
-                to={`/market`}
-                className="rounded-lg flex flex-col cursor-pointer nftitems"
-              >
-                <div
-                  className="bg-purple-400 m-2 mb-0"
-                  style={{ height: "80%" }}
+            </CardDivWrapper>
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper bgPath={country_icon_svg} className="m-2 mb-0">
+                <img src={homePic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
                 >
-                  {city_icon_svg}
-                </div>
-                <div className="flex justify-center" style={{ height: "20%" }}>
-                  <span
-                    className="text-xl self-center"
-                    style={{
-                      color: "#FFCA0E",
-                      fontFamily: "Montserrat",
-                      fontWeight: 900,
-                      fontStyle: "normal",
-                      lineHeight: "96%",
-                    }}
-                  >
-                    CITY
-                  </span>
-                </div>
-              </Link>
-              <div
-                className="rounded-lg flex flex-col cursor-pointer"
-                style={{
-                  width: "300px",
-                  height: "250px",
-                  boxShadow: "0px 2px 4px rgba(255, 0, 0, 0.25)",
-                }}
-              >
-                <div
-                  className="bg-purple-400 m-2 mb-0"
-                  style={{ height: "80%" }}
-                >
-                  {landmark_icon_svg}
-                </div>
-                <div className="flex justify-center" style={{ height: "20%" }}>
-                  <span
-                    className="text-xl self-center"
-                    style={{
-                      color: "#FFCA0E",
-                      fontFamily: "Montserrat",
-                      fontWeight: 900,
-                      fontStyle: "normal",
-                      lineHeight: "96%",
-                    }}
-                  >
-                    LANDMARK
-                  </span>
-                </div>
+                  🏠
+                </span> */}
               </div>
-            </div>
-          </div>
+            </CardDivWrapper>
+            <CardLinkWrapper
+              to={`/market`}
+              className="rounded-lg flex flex-col cursor-pointer"
+            >
+              <BackgroundWrapper bgPath={city_icon_svg} className="m-2 mb-0">
+                <img src={hotelPic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
+                >
+                  🏩
+                </span> */}
+              </div>
+            </CardLinkWrapper>
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper
+                bgPath={landmark_icon_svg}
+                className="m-2 mb-0"
+              >
+                <img src={statusPic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
+                >
+                  🗽
+                </span> */}
+              </div>
+            </CardDivWrapper>
+            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+              <BackgroundWrapper className="m-2 mb-0">
+                <img src={stadiumPic} />
+              </BackgroundWrapper>
+              <div className="flex justify-center" style={{ height: "20%" }}>
+                {/* <span
+                  className="text-xl self-center"
+                  style={{
+                    color: "#FFCA0E",
+                    fontFamily: "Montserrat",
+                    fontWeight: 900,
+                    fontStyle: "normal",
+                    lineHeight: "96%",
+                    fontSize: "30px",
+                  }}
+                >
+                  🏟
+                </span> */}
+              </div>
+            </CardDivWrapper>
+          </CardBoxWrapper>
         </div>
       </div>
-    </>
+    </div>
   );
 }

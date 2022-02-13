@@ -15,9 +15,120 @@ import { Iconly } from "react-iconly";
 import { useHistory } from "react-router-dom";
 
 import Store from "../stores/store";
+import styled from "styled-components";
 const store = Store.store;
 const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
+
+const MarketplaceWrapper = styled.div`
+  height: 90vh;
+  font-family: Poppins;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+const SidebarWrapper = styled.aside`
+  background-color: rgba(196, 196, 196, 0);
+  width: 18%;
+  display: flex;
+  flex-direction: column;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+`;
+
+const FilterWrapper = styled.span`
+  color: #000000;
+  font-weight: 600;
+  font-size: 50px;
+  font-style: normal;
+  line-height: 73px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    font-size: 30px;
+    line-height: 30px;
+    font-weight: 500;
+  }
+`;
+
+const FiltercontentWrapper = styled.div`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 60%;
+  }
+`;
+
+const FilterItemWrapper = styled.ul`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 96%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    overflow: auto;
+  }
+`;
+
+const FilterOptionWrapper = styled.a`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    height: 50px;
+  }
+`;
+
+const FilterNameWrapper = styled.span`
+  border: 1px solid #000000;
+  width: 100%;
+  opacity: 0.1;
+`;
+
+const SecondFilterWrapper = styled.header`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+`;
+
+const NftContentWrapper = styled.div`
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+`;
+
+const NftItemWrapper = styled.div`
+  width: 350px;
+  height: 370px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 260px;
+    height: 360px;
+  }
+`;
+
+const SvgWrapper = styled.div`
+  height: 85%;
+  background:radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%);
+`;
+
+const LineWrapper=styled.div`
+  height:10%;
+`;
+
+const EmojiWrapper = styled.div`
+  color: transparent;
+  text-shadow: 0 0 #DC1FFF;
+`;
+
+const BidCountWrapper = styled.span`
+  color: #828282;
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 20px;
+  font-style: normal;
+  line-height: 22px;
+`;
 
 export default function Marketplace() {
   const route_history = useHistory();
@@ -118,7 +229,6 @@ export default function Marketplace() {
  </svg>`;
 
   const routeToDetail = (id) => {
-    console.log("click ", id);
     route_history.push("/nft/" + id);
   };
 
@@ -144,19 +254,17 @@ export default function Marketplace() {
   };
 
   return (
-    <div className="flex flex-row home marketlayout" style={{ height: "90vh" }}>
-      <aside className="sidebar filterbar">
+    <MarketplaceWrapper className="flex flex-row">
+      <SidebarWrapper className="sidebar">
         <div className="sidebar-header flex py-4 px-2">
-          <span className="self-start filtername" style={{}}>
-            Filter
-          </span>
+          <FilterWrapper className="self-start">Filter</FilterWrapper>
         </div>
-        <div className="sidebar-content filtercontent">
-          <ul className="flex flex-col w-full filteritem">
+        <FiltercontentWrapper className="sidebar-content">
+          <FilterItemWrapper className="flex flex-col w-full">
             <li>
-              <a
+              <FilterOptionWrapper
                 href="#"
-                className="flex flex-row justify-between items-center rounded-lg h-20 px-3 eachfilter"
+                className="flex flex-row justify-between items-center rounded-lg h-20 px-3"
               >
                 <span style={Styles.filterOption}>Categories</span>
                 <Iconly
@@ -165,21 +273,15 @@ export default function Marketplace() {
                   primaryColor="black"
                   size="large"
                 />
-              </a>
+              </FilterOptionWrapper>
               <div className="flex items-center px-3">
-                <span
-                  style={{
-                    border: "1px solid #000000",
-                    width: "100%",
-                    opacity: "0.1",
-                  }}
-                ></span>
+                <FilterNameWrapper />
               </div>
             </li>
             <li className="my-px">
-              <a
+              <FilterOptionWrapper
                 href="#"
-                className="flex flex-row justify-between items-center rounded-lg h-20 px-3 eachfilter"
+                className="flex flex-row justify-between items-center rounded-lg h-20 px-3"
               >
                 <span style={Styles.filterOption}>Price</span>
                 <Iconly
@@ -188,21 +290,15 @@ export default function Marketplace() {
                   primaryColor="black"
                   size="large"
                 />
-              </a>
+              </FilterOptionWrapper>
               <div className="flex items-center px-3">
-                <span
-                  style={{
-                    border: "1px solid #000000",
-                    width: "100%",
-                    opacity: "0.1",
-                  }}
-                ></span>
+                <FilterNameWrapper />
               </div>
             </li>
             <li>
-              <a
+              <FilterOptionWrapper
                 href="#"
-                className="flex flex-row justify-between  items-center rounded-lg h-20 px-3 eachfilter"
+                className="flex flex-row justify-between  items-center rounded-lg h-20 px-3"
               >
                 <span style={Styles.filterOption}>Status</span>
                 <Iconly
@@ -211,23 +307,16 @@ export default function Marketplace() {
                   primaryColor="black"
                   size="large"
                 />
-              </a>
+              </FilterOptionWrapper>
               <div className="flex items-center px-3">
-                <span
-                  style={{
-                    border: "1px solid #000000",
-                    width: "100%",
-                    opacity: "0.1",
-                  }}
-                ></span>
+                <FilterNameWrapper />
               </div>
             </li>
-          </ul>
-        </div>
-      </aside>
+          </FilterItemWrapper>
+        </FiltercontentWrapper>
+      </SidebarWrapper>
       <main className="main flex flex-col flex-grow">
-        <header className="header bg-white shadow py-4 px-4 secondfilter">
-          {/* NFTs minted: {nftCount} */}
+        <SecondFilterWrapper className="header bg-white shadow py-4 px-4">
           <div className="flex justify-between">
             <div>
               <button
@@ -255,30 +344,23 @@ export default function Marketplace() {
               />
             </div>
           </div>
-        </header>
+        </SecondFilterWrapper>
         <div className="main-content">
           <div className="w-full p-6">
             {loading && <span>Loading ...</span>}
             {!loading && (
-              <div className="grid grid-cols-3 gap-4 nftcontent">
+              <NftContentWrapper className="grid grid-cols-3 gap-4">
                 {nftList.map((nft, idx) => {
                   return (
-                    <div
-                      className="w-full flex flex-col items-center justify-center rounded-lg cursor-pointer hover:shadow-md h-full nftitem"
+                    <NftItemWrapper
+                      className="w-full flex flex-col items-center justify-center rounded-lg cursor-pointer hover:shadow-md h-full"
                       onClick={() => routeToDetail(nft.tokenId)}
                       key={idx}
                     >
                       {/* {nft.isNftOwned && (
                         <div className="p-2 font-semibold">Owned</div>
                       )} */}
-                      <div
-                        className="relative w-full p-1 flex justify-center m-2"
-                        style={{
-                          height: "85%",
-                          background:
-                            "radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%)",
-                        }}
-                      >
+                      <SvgWrapper className="relative w-full p-1 flex justify-center m-2">
                         <div
                           dangerouslySetInnerHTML={{ __html: nft.svg_image }}
                         ></div>
@@ -288,14 +370,9 @@ export default function Marketplace() {
                         width="100px"
                         height="100px"
                       ></img> */}
-                      </div>
-                      <div
-                        className="flex justify-between w-full"
-                        style={{
-                          height: "10%",
-                        }}
-                      >
-                        <div className="ml-2 flex flex-row">
+                      </SvgWrapper>
+                      <LineWrapper className="flex justify-between w-full">
+                        <EmojiWrapper className="ml-2 flex flex-row">
                           {/* <Iconly
                             name="Heart2"
                             set="two-tone"
@@ -303,24 +380,13 @@ export default function Marketplace() {
                             size="medium"
                           /> */}
                           💜
-                          <span
-                            style={{
-                              color: "#828282",
-                              fontFamily: "Montserrat",
-                              fontWeight: 600,
-                              fontSize: "20px",
-                              fontStyle: "normal",
-                              lineHeight: "22px",
-                            }}
-                          >
-                            &nbsp;23
-                          </span>
-                        </div>
+                          <BidCountWrapper>&nbsp;23</BidCountWrapper>
+                        </EmojiWrapper>
                         <div className="mr-2">
                           <span
                             style={{
                               color: "#5D5D5D",
-                              fontFamily: "Montserrat",
+                              fontFamily: "Poppins",
                               fontWeight: 600,
                               fontSize: "20px",
                               fontStyle: "normal",
@@ -330,7 +396,7 @@ export default function Marketplace() {
                             current bid
                           </span>
                         </div>
-                      </div>
+                      </LineWrapper>
                       <div
                         className="flex justify-between w-full"
                         style={{
@@ -368,7 +434,7 @@ export default function Marketplace() {
                           <span
                             className="uppercase"
                             style={{
-                              color: "#00FFA3",
+                              color: "#DC1FFF",
                               fontWeight: 600,
                               fontSize: "20px",
                               fontStyle: "normal",
@@ -380,25 +446,9 @@ export default function Marketplace() {
                         </div>
                       </div>
                       <hr />
-                      <div
-                        className="flex justify-between w-full mt-2"
-                        style={{
-                          height: "10%",
-                        }}
-                      >
+                      <LineWrapper className="flex justify-between w-full mt-2">
                         <div className="ml-2">
-                          <span
-                            style={{
-                              color: "#828282",
-                              fontFamily: "Montserrat",
-                              fontWeight: 600,
-                              fontSize: "18px",
-                              fontStyle: "normal",
-                              lineHeight: "22px",
-                            }}
-                          >
-                            Owned by
-                          </span>
+                          <BidCountWrapper>Longitude</BidCountWrapper>
                           {/* <span
                             className="uppercase"
                             style={{
@@ -412,15 +462,20 @@ export default function Marketplace() {
                             {nft.owner}&nbsp;
                           </span> */}
                         </div>
-                      </div>
-                    </div>
+                      </LineWrapper>
+                      <LineWrapper className="flex justify-between w-full mt-2">
+                        <div className="ml-2">
+                          <BidCountWrapper>Latitude</BidCountWrapper>
+                        </div>
+                      </LineWrapper>
+                    </NftItemWrapper>
                   );
                 })}
-              </div>
+              </NftContentWrapper>
             )}
           </div>
         </div>
       </main>
-    </div>
+    </MarketplaceWrapper>
   );
 }
