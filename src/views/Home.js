@@ -38,13 +38,14 @@ const BannerWrapper = styled.div`
 const VideoWrapper = styled.div`
   width: 50%;
   height: 100%;
+  text-align: center;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
     height: 330px;
   }
 `;
 
-const IframeWrapper=styled.iframe`
+const IframeWrapper = styled.iframe`
   height: 100%;
   width: 100%;
 `;
@@ -80,13 +81,13 @@ const ExploreWrapper = styled(Link)`
 `;
 
 const CardBoxWrapper = styled.div`
-  width: 90%;
+  max-width: 90%;
   display: flex;
   flex-direction: row;
   align-items: center;
   overflow: auto;
   justify-content: flex-start;
-  padding-bottom:10px;
+  padding-bottom: 10px;
   margin: auto;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
@@ -132,6 +133,9 @@ export default function Home() {
             allowFullScreen
             title="Embedded youtube"
           />
+          <a href="https://youtu.be/wTYi2W18REE" target={"_blank"}>
+            Click here to see the movie
+          </a>
         </VideoWrapper>
       </BannerWrapper>
       <div className="flex flex-col">
