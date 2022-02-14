@@ -57,7 +57,7 @@ const FilterWrapper = styled.span`
 
 const FiltercontentWrapper = styled.div`
   ${({ theme }) => theme.mediaQueries.sm} {
-    width: 40%;
+    width: 60%;
     padding: 10px;
   }
 `;
@@ -140,16 +140,123 @@ const DropdownWrapper = styled.div`
   }
 `;
 
+const DropdownItemWrapper = styled.div`
+  width: 90%;
+  text-align: right;
+  height: 50px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  border-bottom: 1px black;
+  cursor: pointer;
+`;
+
+const FilterCardBoxWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    flex-direction: column;
+  }
+`;
+
+const FilterCardWrapper = styled.button`
+  border: 0px solid rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  box-shadow: 8px 8px 4px rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  width: 180px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 150px;
+  }
+`;
+
+const SortWrapper = styled.div`
+  position: absolute;
+  right: 20px;
+  z-index: 10;
+  background: aliceblue;
+  width: 200px;
+`;
+
 export default function Marketplace() {
   const route_history = useHistory();
   const [nftCount, setNftCount] = useState(0);
   const [nftList, setNftList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [values, setValues] = useState(["Categories", "Price", "Status"]);
-  const [selected, setSelected] = useState("Categories");
-  const handleChange = (event) => {
-    setSelected(event.target.value);
+  const [values, setValues] = useState([
+    "🏠 Home",
+    "🏩 Hotel",
+    "🏪 Store",
+    "🏟 Stadium",
+    "🗽 Landmark",
+    "From - To",
+    "🛒 Buy now",
+    "⏱ Timed auction",
+    "👋 Open for offers",
+    "🚫 Not for sale",
+    "Recently added",
+    "Price: Low to high",
+    "Price: High to low",
+    "Auction: ending soon",
+  ]);
+  const [selected, setSelected] = useState("");
+  const [filterArray, setFilterArray] = useState([]);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [priceOpen, setPriceOpen] = useState(false);
+  const [onesaleOpen, setOnesaleOpen] = useState(false);
+  const [sortbyOpen, setSortbyOpen]=useState(false);
+
+  //filter select
+  const filterMobileChange = (event) => {
+    addFilter(event.target.value);
   };
+
+  const removeFilter = (filter) => {
+    filterArray.splice(filterArray.indexOf(filter), 1);
+    setFilterArray([...filterArray]);
+  };
+
+  const addFilter=(filter)=>{
+    setSelected(values[filter]);
+    if (filter < 5) {
+      for (let i = 0; i < 5; i++) {
+        if (filterArray.indexOf(values[i]) > -1) {
+          filterArray[filterArray.indexOf(values[i])] =
+            values[filter];
+          setFilterArray([...filterArray]);
+          return;
+        }
+      }
+    } else if (filter == 5) {
+      console.log(filterArray.indexOf(filter));
+      if (filterArray.indexOf(values[5]) > -1) {
+        return;
+      }
+    } else if(filter<10){
+      for (let j = 6; j < 10; j++) {
+        if (filterArray.indexOf(values[j]) > -1) {
+          filterArray[filterArray.indexOf(values[j])] =
+            values[filter];
+          setFilterArray([...filterArray]);
+          return;
+        }
+      }
+    } else {
+      for (let k = 10; k < 14; k++) {
+        if (filterArray.indexOf(values[k]) > -1) {
+          filterArray[filterArray.indexOf(values[k])] = values[filter];
+          setFilterArray([...filterArray]);
+          return;
+        }
+      }
+    }
+    filterArray.push(values[filter]);
+    setFilterArray([...filterArray]);
+    setCategoryOpen(false);
+    setPriceOpen(false);
+    setOnesaleOpen(false);
+    setSortbyOpen(false);
+  }
 
   useEffect(() => {
     // console.log(nftList);
@@ -254,42 +361,46 @@ export default function Marketplace() {
       fontSize: "22px",
       fontStyle: "normal",
     },
-    sortSelectedOption: {
-      backgroundColor: "",
-      border: "0px solid rgba(0, 0, 0, 0.25)",
-      borderRadius: "10px",
-      boxShadow: "8px 8px 4px rgba(0, 0, 0, 0.25)",
-      padding: "10px",
-      width: "100px",
-    },
     sortOptionsBtn: {
       fontWeight: 600,
       fontSize: "22px",
     },
   };
 
+  const namesss = "ssss";
+
   const DropdownButton = () => (
-      <FormControl>
-        {/* <InputLabel htmlFor="agent-simple">Agent</InputLabel> */}
-        <Select
-          value={selected}
-          onChange={handleChange}
-          // inputProps={{
-          //   name: "agent",
-          //   id: "age-simple",
-          // }}
-        >
-          {values.map((value, index) => {
-            return (
-              <MenuItem value={value} key={index}>
-                {value}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
+    <FormControl>
+      <InputLabel htmlFor="grouped-native-select">Select by</InputLabel>
+      <Select
+        native
+        defaultValue=""
+        id="grouped-native-select"
+        label="Grouping"
+        // value={selected}
+        onChange={filterMobileChange}
+      >
+        <option aria-label="None" value="" />
+        <optgroup label="🗄Categories">
+          <option value={0}>🏠 Home</option>
+          <option value={1}>🏩 Hotel</option>
+          <option value={2}>🏪 Store</option>
+          <option value={3}>🏟 Stadium</option>
+          <option value={4}>🗽 Landmark</option>
+        </optgroup>
+        <optgroup label="💲Price">
+          <option value={5}>From - To</option>
+        </optgroup>
+        <optgroup label="⚡️One Sale">
+          <option value={6}>🛒 Buy now</option>
+          <option value={7}>⏱ Timed auction</option>
+          <option value={8}>👋 Open for offers</option>
+          <option value={9}>🚫 Not for sale</option>
+        </optgroup>
+      </Select>
+    </FormControl>
   );
-  
+
   return (
     <MarketplaceWrapper className="flex flex-row">
       <SidebarWrapper className="sidebar">
@@ -305,9 +416,13 @@ export default function Marketplace() {
               <FilterOptionWrapper
                 href="#"
                 className="flex flex-row justify-between items-center rounded-lg h-20 px-3"
+                onClick={() => {
+                  setCategoryOpen(!categoryOpen);
+                }}
               >
                 <span style={Styles.filterOption}>Categories</span>
                 <Iconly
+                  style={{ transform: categoryOpen && "rotate(180deg)" }}
                   name="ChevronDownCircle"
                   set="two-tone"
                   primaryColor="black"
@@ -317,14 +432,57 @@ export default function Marketplace() {
               <div className="flex items-center px-3">
                 <FilterNameWrapper />
               </div>
+              {categoryOpen && (
+                <div>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(0);
+                    }}
+                  >
+                    🏠 Home
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(1);
+                    }}
+                  >
+                    🏩 Hotel
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(2);
+                    }}
+                  >
+                    🏪 Store
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(3);
+                    }}
+                  >
+                    🏟 Stadium
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(4);
+                    }}
+                  >
+                    🗽 Landmark
+                  </DropdownItemWrapper>
+                </div>
+              )}
             </li>
             <li className="my-px">
               <FilterOptionWrapper
                 href="#"
                 className="flex flex-row justify-between items-center rounded-lg h-20 px-3"
+                onClick={() => {
+                  setPriceOpen(!priceOpen);
+                }}
               >
                 <span style={Styles.filterOption}>Price</span>
                 <Iconly
+                  style={{ transform: priceOpen && "rotate(180deg)" }}
                   name="ChevronDownCircle"
                   set="two-tone"
                   primaryColor="black"
@@ -334,14 +492,29 @@ export default function Marketplace() {
               <div className="flex items-center px-3">
                 <FilterNameWrapper />
               </div>
+              {priceOpen && (
+                <div>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(5);
+                    }}
+                  >
+                    From - To
+                  </DropdownItemWrapper>
+                </div>
+              )}
             </li>
             <li>
               <FilterOptionWrapper
                 href="#"
                 className="flex flex-row justify-between  items-center rounded-lg h-20 px-3"
+                onClick={() => {
+                  setOnesaleOpen(!onesaleOpen);
+                }}
               >
-                <span style={Styles.filterOption}>Status</span>
+                <span style={Styles.filterOption}>One Sale</span>
                 <Iconly
+                  style={{ transform: onesaleOpen && "rotate(180deg)" }}
                   name="ChevronDownCircle"
                   set="two-tone"
                   primaryColor="black"
@@ -351,6 +524,38 @@ export default function Marketplace() {
               <div className="flex items-center px-3">
                 <FilterNameWrapper />
               </div>
+              {onesaleOpen && (
+                <div>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(6);
+                    }}
+                  >
+                    🛒 Buy now
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(7);
+                    }}
+                  >
+                    ⏱ Timed auction
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(8);
+                    }}
+                  >
+                    👋 Open for offers
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(9);
+                    }}
+                  >
+                    🚫 Not for sale
+                  </DropdownItemWrapper>
+                </div>
+              )}
             </li>
           </FilterItemWrapper>
         </FiltercontentWrapper>
@@ -358,30 +563,79 @@ export default function Marketplace() {
       <main className="main flex flex-col flex-grow">
         <SecondFilterWrapper className="header bg-white shadow py-4 px-4">
           <div className="flex justify-between">
+            <FilterCardBoxWrapper>
+              {filterArray.map((filter, index) => {
+                return (
+                  <FilterCardWrapper
+                    className="flex flex-row justify-between items-center"
+                    // style={Styles.sortSelectedOption}
+                    key={index}
+                    onClick={() => {
+                      removeFilter(filter);
+                    }}
+                  >
+                    <div style={{ width: "80%" }}>{filter}</div>
+                    <div style={{ width: "20%" }}>
+                      <Iconly
+                        name="CloseSquare"
+                        set="two-tone"
+                        primaryColor="black"
+                        size="medium"
+                      />
+                    </div>
+                  </FilterCardWrapper>
+                );
+              })}
+            </FilterCardBoxWrapper>
             <div>
-              <button
-                className="flex flex-row justify-between"
-                style={Styles.sortSelectedOption}
+              <div
+                className="flex flex-column items-right justify-between cursor-pointer"
+                onClick={() => {
+                  setSortbyOpen(!sortbyOpen);
+                }}
               >
-                Latest
+                <span className="mr-2" style={Styles.sortOptionsBtn}>
+                  Sort by
+                </span>
                 <Iconly
-                  name="CloseSquare"
+                  name="ChevronDownCircle"
                   set="two-tone"
                   primaryColor="black"
                   size="medium"
                 />
-              </button>
-            </div>
-            <div className="flex flex-row">
-              <span className="mr-2" style={Styles.sortOptionsBtn}>
-                Sort by
-              </span>
-              <Iconly
-                name="ChevronDownCircle"
-                set="two-tone"
-                primaryColor="black"
-                size="medium"
-              />
+              </div>
+              {sortbyOpen && (
+                <SortWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(10);
+                    }}
+                  >
+                    Recently added
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(11);
+                    }}
+                  >
+                    Price: Low to high
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(12);
+                    }}
+                  >
+                    Price: High to low
+                  </DropdownItemWrapper>
+                  <DropdownItemWrapper
+                    onClick={() => {
+                      addFilter(13);
+                    }}
+                  >
+                    Auction: ending soon
+                  </DropdownItemWrapper>
+                </SortWrapper>
+              )}
             </div>
           </div>
         </SecondFilterWrapper>
@@ -413,12 +667,6 @@ export default function Marketplace() {
                       </SvgWrapper>
                       <LineWrapper className="flex justify-between w-full">
                         <EmojiWrapper className="ml-2 flex flex-row">
-                          {/* <Iconly
-                            name="Heart2"
-                            set="two-tone"
-                            primaryColor="black"
-                            size="medium"
-                          /> */}
                           💜
                           <BidCountWrapper>&nbsp;23</BidCountWrapper>
                         </EmojiWrapper>
