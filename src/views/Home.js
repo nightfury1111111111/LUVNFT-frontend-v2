@@ -86,6 +86,7 @@ const CardBoxWrapper = styled.div`
   align-items: center;
   overflow: auto;
   justify-content: flex-start;
+  padding-bottom:10px;
   margin: auto;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
@@ -93,19 +94,19 @@ const CardBoxWrapper = styled.div`
 `;
 
 const CardLinkWrapper = styled(Link)`
-  height: 260px;
+  height: 220px;
   box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
 `;
 //same as CardLinkWrapper(will be deleted)
 const CardDivWrapper = styled.div`
-  height: 260px;
+  height: 220px;
   box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
 `;
 
 const BackgroundWrapper = styled.div`
   display: flex;
   align-items: center;
-  width: 220px;
+  width: 180px;
   background-color: black;
   height: 80%;
   background-image: url(${(props) => props.bgPath});
