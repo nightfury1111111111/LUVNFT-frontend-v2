@@ -11,6 +11,7 @@ import {
 } from "@harmony-js/utils";
 import { BN } from "@harmony-js/crypto";
 import { Iconly } from "react-iconly";
+import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 
 import { useHistory } from "react-router-dom";
 
@@ -56,17 +57,14 @@ const FilterWrapper = styled.span`
 
 const FiltercontentWrapper = styled.div`
   ${({ theme }) => theme.mediaQueries.sm} {
-    width: 60%;
+    width: 40%;
+    padding: 10px;
   }
 `;
 
 const FilterItemWrapper = styled.ul`
   ${({ theme }) => theme.mediaQueries.sm} {
-    width: 96%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    overflow: auto;
+    display: none;
   }
 `;
 
@@ -109,16 +107,20 @@ const NftItemWrapper = styled.div`
 
 const SvgWrapper = styled.div`
   height: 85%;
-  background:radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%);
+  background: radial-gradient(
+    77.96% 81.64% at 50% 50%,
+    #ffffff 0%,
+    #ffca0e 100%
+  );
 `;
 
-const LineWrapper=styled.div`
-  height:10%;
+const LineWrapper = styled.div`
+  height: 10%;
 `;
 
 const EmojiWrapper = styled.div`
   color: transparent;
-  text-shadow: 0 0 #DC1FFF;
+  text-shadow: 0 0 #dc1fff;
 `;
 
 const BidCountWrapper = styled.span`
@@ -130,11 +132,24 @@ const BidCountWrapper = styled.span`
   line-height: 22px;
 `;
 
+const DropdownWrapper = styled.div`
+  display: none;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+`;
+
 export default function Marketplace() {
   const route_history = useHistory();
   const [nftCount, setNftCount] = useState(0);
   const [nftList, setNftList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState(["Categories", "Price", "Status"]);
+  const [selected, setSelected] = useState("Categories");
+  const handleChange = (event) => {
+    setSelected(event.target.value);
+  };
 
   useEffect(() => {
     // console.log(nftList);
@@ -253,6 +268,28 @@ export default function Marketplace() {
     },
   };
 
+  const DropdownButton = () => (
+      <FormControl>
+        {/* <InputLabel htmlFor="agent-simple">Agent</InputLabel> */}
+        <Select
+          value={selected}
+          onChange={handleChange}
+          // inputProps={{
+          //   name: "agent",
+          //   id: "age-simple",
+          // }}
+        >
+          {values.map((value, index) => {
+            return (
+              <MenuItem value={value} key={index}>
+                {value}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
+  );
+  
   return (
     <MarketplaceWrapper className="flex flex-row">
       <SidebarWrapper className="sidebar">
@@ -260,6 +297,9 @@ export default function Marketplace() {
           <FilterWrapper className="self-start">Filter</FilterWrapper>
         </div>
         <FiltercontentWrapper className="sidebar-content">
+          <DropdownWrapper>
+            <DropdownButton />
+          </DropdownWrapper>
           <FilterItemWrapper className="flex flex-col w-full">
             <li>
               <FilterOptionWrapper

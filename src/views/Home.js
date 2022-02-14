@@ -16,11 +16,8 @@ import landmark_icon_svg from "../assets/img/landmark.svg";
 import homePic from "../assets/img/home-m-2022.02.10-21_27_53.png";
 import salePic from "../assets/img/home.png";
 import stadiumPic from "../assets/img/stadium.png";
-import countryPic from "../assets/img/country.png";
 import statusPic from "../assets/img/status.png";
 import hotelPic from "../assets/img/luv-hotel.png";
-import cityPic from "../assets/img/city.png";
-import landmarkPic from "../assets/img/landmark.png";
 
 const BannerWrapper = styled.div`
   width: 100%;

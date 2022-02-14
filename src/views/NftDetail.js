@@ -54,8 +54,11 @@ const NftDetailWrapper = styled.div`
 const NftPicWrapper = styled.div`
   width: 40%;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  background:
-    radial-gradient(77.96% 81.64% at 50% 50%, #FFFFFF 0%, #FFCA0E 100%);
+  background: radial-gradient(
+    77.96% 81.64% at 50% 50%,
+    #ffffff 0%,
+    #ffca0e 100%
+  );
   height: 100%;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
@@ -65,7 +68,7 @@ const NftPicWrapper = styled.div`
 
 const DescriptionWrapper = styled.div`
   width: 55%;
-  font-family:"Poppins";
+  font-family: "Poppins";
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
   }
@@ -84,16 +87,16 @@ export default function NftDetail() {
   const [nftObj, setNftObj] = useState(null);
   const [auctionObj, setAuctionObj] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [bidTime, setBidTime] = useState(60);
+  const [bidTime, setBidTime] = useState(60 * 30);
   const [bidPrice, setBidPrice] = useState(0.01);
   const [timerObj, setTimerObj] = useState(null);
   const [timerEnded, setTimerEnded] = useState(false);
 
   const selectedBidTimes = [
-    { name: "5 mins", value: 60 * 5 },
-    { name: "10 mins", value: 60 * 10 },
-    { name: "30 mins", value: 60 * 30 },
+    { name: "30 min", value: 60 * 30 },
     { name: "1 hour", value: 60 * 60 },
+    { name: "3 hours", value: 60 * 60 * 3 },
+    { name: "1 day", value: 60 * 60 * 24 },
   ];
 
   const getCompressed = (addr) => {
@@ -574,7 +577,7 @@ export default function NftDetail() {
         </svg>
       </button>
       <ul className="dropdown-menu absolute hidden text-gray-700 pt-1 bg-gray-100">
-        {selectedBidTimes.map((bdt,id) => {
+        {selectedBidTimes.map((bdt, id) => {
           return (
             <li key={id}>
               <a
