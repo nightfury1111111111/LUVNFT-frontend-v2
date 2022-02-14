@@ -116,6 +116,15 @@ const BackgroundWrapper = styled.div`
   background-size: cover;
 `;
 
+const NftNameWrapper = styled.span`
+  color: #000000;
+  font-family:Montserrat;
+  font-weight: 900;
+  font-style: normal;
+  line-height: 96%;
+  font-size: 18px;
+`;
+
 export default function Home() {
   let { path, url } = useRouteMatch();
   return (
@@ -156,19 +165,9 @@ export default function Home() {
                 <img src={salePic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏬
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏬 NFT STORE
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
@@ -176,19 +175,9 @@ export default function Home() {
                 <img src={homePic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏠
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏠 NFT HOME
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
             <CardLinkWrapper
@@ -199,19 +188,9 @@ export default function Home() {
                 <img src={hotelPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏩
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏩 NFT HOTEL
+                </NftNameWrapper>
               </div>
             </CardLinkWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
@@ -222,19 +201,9 @@ export default function Home() {
                 <img src={statusPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🗽
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🗽 NFT LANDMARK
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
@@ -242,19 +211,9 @@ export default function Home() {
                 <img src={stadiumPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏟
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏟 NFT STADIUM
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
           </CardBoxWrapper>

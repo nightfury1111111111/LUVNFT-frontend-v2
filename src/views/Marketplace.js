@@ -137,6 +137,7 @@ const DropdownWrapper = styled.div`
   ${({ theme }) => theme.mediaQueries.sm} {
     display: flex;
     flex-direction: column-reverse;
+    align-items: flex-end;
   }
 `;
 
