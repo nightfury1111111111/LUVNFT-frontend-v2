@@ -31,17 +31,19 @@ const BannerWrapper = styled.div`
   ${({ theme }) => theme.mediaQueries.sm} {
     flex-direction: column;
     justify-content: flex-start;
-    height: 420px;
+    height: 320px;
   }
 `;
 
 const VideoWrapper = styled.div`
-  width: 50%;
+  width: 40%;
   height: 100%;
   text-align: center;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
-    height: 330px;
+    height: 250px;
+    display:flex;
+    flex-direction:column;
   }
 `;
 
@@ -127,6 +129,7 @@ const NftNameWrapper = styled.span`
 
 export default function Home() {
   let { path, url } = useRouteMatch();
+
   return (
     <div>
       <BannerWrapper>
@@ -135,16 +138,16 @@ export default function Home() {
           <div>THE METAVERSE</div>
         </TitleWrapper>
         <VideoWrapper>
-          <IframeWrapper
-            src={`https://youtu.be/wTYi2W18REE`}
+          <video
+            // class="DG_video__2_qUl"
+            // id="my-video"
+            controls
+            autoPlay
+            loop
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Embedded youtube"
-          />
-          <a href="https://youtu.be/wTYi2W18REE" target={"_blank"}>
-            Click here to see the movie
-          </a>
+          >
+            <source src="https://youtu.be/wTYi2W18REE" />
+          </video>
         </VideoWrapper>
       </BannerWrapper>
       <div className="flex flex-col">
