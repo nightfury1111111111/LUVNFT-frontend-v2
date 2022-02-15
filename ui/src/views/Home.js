@@ -31,20 +31,23 @@ const BannerWrapper = styled.div`
   ${({ theme }) => theme.mediaQueries.sm} {
     flex-direction: column;
     justify-content: flex-start;
-    height: 420px;
+    height: 320px;
   }
 `;
 
 const VideoWrapper = styled.div`
-  width: 50%;
+  width: 40%;
   height: 100%;
+  text-align: center;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
-    height: 330px;
+    height: 250px;
+    display:flex;
+    flex-direction:column;
   }
 `;
 
-const IframeWrapper=styled.iframe`
+const IframeWrapper = styled.iframe`
   height: 100%;
   width: 100%;
 `;
@@ -80,12 +83,13 @@ const ExploreWrapper = styled(Link)`
 `;
 
 const CardBoxWrapper = styled.div`
-  width: 90%;
+  max-width: 90%;
   display: flex;
   flex-direction: row;
   align-items: center;
   overflow: auto;
   justify-content: flex-start;
+  padding-bottom: 10px;
   margin: auto;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
@@ -93,19 +97,19 @@ const CardBoxWrapper = styled.div`
 `;
 
 const CardLinkWrapper = styled(Link)`
-  height: 260px;
+  height: 220px;
   box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
 `;
 //same as CardLinkWrapper(will be deleted)
 const CardDivWrapper = styled.div`
-  height: 260px;
+  height: 220px;
   box-shadow: 0px 2px 4px rgba(255, 0, 0, 0.25);
 `;
 
 const BackgroundWrapper = styled.div`
   display: flex;
   align-items: center;
-  width: 220px;
+  width: 180px;
   background-color: black;
   height: 80%;
   background-image: url(${(props) => props.bgPath});
@@ -114,8 +118,18 @@ const BackgroundWrapper = styled.div`
   background-size: cover;
 `;
 
+const NftNameWrapper = styled.span`
+  color: #000000;
+  font-family:Montserrat;
+  font-weight: 900;
+  font-style: normal;
+  line-height: 96%;
+  font-size: 18px;
+`;
+
 export default function Home() {
   let { path, url } = useRouteMatch();
+
   return (
     <div>
       <BannerWrapper>
@@ -124,13 +138,16 @@ export default function Home() {
           <div>THE METAVERSE</div>
         </TitleWrapper>
         <VideoWrapper>
-          <IframeWrapper
-            src={`https://youtu.be/wTYi2W18REE`}
+          <video
+            // class="DG_video__2_qUl"
+            // id="my-video"
+            controls
+            autoPlay
+            loop
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Embedded youtube"
-          />
+          >
+            <source src="https://youtu.be/wTYi2W18REE" />
+          </video>
         </VideoWrapper>
       </BannerWrapper>
       <div className="flex flex-col">
@@ -151,19 +168,9 @@ export default function Home() {
                 <img src={salePic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏬
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏬 NFT STORE
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
@@ -171,19 +178,9 @@ export default function Home() {
                 <img src={homePic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏠
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏠 NFT HOME
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
             <CardLinkWrapper
@@ -194,19 +191,9 @@ export default function Home() {
                 <img src={hotelPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏩
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏩 NFT HOTEL
+                </NftNameWrapper>
               </div>
             </CardLinkWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
@@ -217,19 +204,9 @@ export default function Home() {
                 <img src={statusPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🗽
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🗽 NFT LANDMARK
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
@@ -237,19 +214,9 @@ export default function Home() {
                 <img src={stadiumPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
-                {/* <span
-                  className="text-xl self-center"
-                  style={{
-                    color: "#FFCA0E",
-                    fontFamily: "Montserrat",
-                    fontWeight: 900,
-                    fontStyle: "normal",
-                    lineHeight: "96%",
-                    fontSize: "30px",
-                  }}
-                >
-                  🏟
-                </span> */}
+                <NftNameWrapper className="text-xl self-center">
+                  🏟 NFT STADIUM
+                </NftNameWrapper>
               </div>
             </CardDivWrapper>
           </CardBoxWrapper>

@@ -81,22 +81,45 @@ const BidLogWrapper = styled.div`
   }
 `;
 
+const Divider = styled.span`
+  border: 1px solid #000000;
+  width:2px;
+  ${({ theme }) => theme.mediaQueries.sm}{
+    width:0;
+    display:none;
+  }
+  height: 80%;
+  opacity: 0.2;
+`;
+
+const AuctionWrapper = styled.div`
+  height:26%;
+  padding-top:10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  ${({ theme }) => theme.mediaQueries.sm}{
+    flex-direction:column;
+
+  }
+`;
+
 export default function NftDetail() {
   let { id } = useParams();
   const [contract, setContract] = useState(null);
   const [nftObj, setNftObj] = useState(null);
   const [auctionObj, setAuctionObj] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [bidTime, setBidTime] = useState(60);
+  const [bidTime, setBidTime] = useState(60 * 30);
   const [bidPrice, setBidPrice] = useState(0.01);
   const [timerObj, setTimerObj] = useState(null);
   const [timerEnded, setTimerEnded] = useState(false);
 
   const selectedBidTimes = [
-    { name: "5 mins", value: 60 * 5 },
-    { name: "10 mins", value: 60 * 10 },
-    { name: "30 mins", value: 60 * 30 },
+    { name: "30 min", value: 60 * 30 },
     { name: "1 hour", value: 60 * 60 },
+    { name: "3 hours", value: 60 * 60 * 3 },
+    { name: "1 day", value: 60 * 60 * 24 },
   ];
 
   const getCompressed = (addr) => {
@@ -868,73 +891,57 @@ export default function NftDetail() {
                         hills with locals around.
                       </span>
                     </div>
-                    <div
-                      className=" flex flex-row justify-between"
-                      style={{ height: "26%" }}
-                    >
+                    <AuctionWrapper>
                       <div
-                        className="flex flex-col ml-2"
+                        className="flex flex-col ml-4"
                         style={{ width: "100%" }}
                       >
-                        <span style={styles.listEntry}>Current price</span>
                         <div>
-                          <span
-                            style={{
-                              color: "#00FFA3",
-                              fontWeight: 600,
-                              fontSize: "24px",
-                              lineHeight: "24px",
-                            }}
-                          >
-                            {nftObj.price}&nbsp;
-                          </span>
-                          <span
-                            style={{
-                              color: "#000000",
-                              fontWeight: 600,
-                              fontSize: "24px",
-                              lineHeight: "24px",
-                            }}
-                          >
-                            $USD&nbsp;
-                          </span>
-                          <span
-                            style={{
-                              color: "#DC1FFF",
-                              fontWeight: 600,
-                              fontSize: "20px",
-                              lineHeight: "24px",
-                            }}
-                          >
-                            ($xxx)
-                          </span>
+                          <span style={styles.listEntry}>Current price</span>
+                          <div>
+                            <span
+                              style={{
+                                color: "#00FFA3",
+                                fontWeight: 600,
+                                fontSize: "24px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              {nftObj.price}&nbsp;
+                            </span>
+                            <span
+                              style={{
+                                color: "#000000",
+                                fontWeight: 600,
+                                fontSize: "24px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              $USD&nbsp;
+                            </span>
+                            <span
+                              style={{
+                                color: "#DC1FFF",
+                                fontWeight: 600,
+                                fontSize: "20px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              ($xxx)
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <span
-                        style={{
-                          border: "1px solid #000000",
-                          width: "2px",
-                          height: "80%",
-                          opacity: "0.2",
-                        }}
-                      ></span>
+                      <Divider />
                       {nftObj.hasAuctionStarted &&
                         auctionObj &&
                         !auctionObj.auctionEnded && (
                           <>
                             <AuctionTime />
-                            <span
-                              style={{
-                                border: "1px solid #000000",
-                                width: "2px",
-                                height: "80%",
-                                opacity: "0.2",
-                              }}
-                            ></span>
+                            <Divider />
                             <HighestBidInfo />
                           </>
                         )}
-
                       {!nftObj.isNftOwned &&
                         !nftObj.mintFreshNft &&
                         !nftObj.hasAuctionStarted &&
@@ -945,7 +952,7 @@ export default function NftDetail() {
                       {nftObj.isNftOwned && !nftObj.hasAuctionStarted && (
                         <AuctionNot />
                       )}
-                    </div>
+                    </AuctionWrapper>
                     <div
                       className="flex justify-start items-center"
                       style={{ height: "18%" }}

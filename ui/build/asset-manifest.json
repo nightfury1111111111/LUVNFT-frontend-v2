@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c83d1a2c.chunk.css",
+    "main.js": "/static/js/main.419dd4ca.chunk.js",
+    "main.js.map": "/static/js/main.419dd4ca.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.09131c48.js",
+    "runtime-main.js.map": "/static/js/runtime-main.09131c48.js.map",
+    "static/css/2.c2cad7ad.chunk.css": "/static/css/2.c2cad7ad.chunk.css",
+    "static/js/2.ca5eb414.chunk.js": "/static/js/2.ca5eb414.chunk.js",
+    "static/js/2.ca5eb414.chunk.js.map": "/static/js/2.ca5eb414.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.c2cad7ad.chunk.css.map": "/static/css/2.c2cad7ad.chunk.css.map",
+    "static/css/main.c83d1a2c.chunk.css.map": "/static/css/main.c83d1a2c.chunk.css.map",
+    "static/js/2.ca5eb414.chunk.js.LICENSE.txt": "/static/js/2.ca5eb414.chunk.js.LICENSE.txt",
+    "static/media/city.f64bf68f.svg": "/static/media/city.f64bf68f.svg",
+    "static/media/country.13568700.svg": "/static/media/country.13568700.svg",
+    "static/media/landmark.d6f5030a.svg": "/static/media/landmark.d6f5030a.svg",
+    "static/media/stadium.dee53a7d.png": "/static/media/stadium.dee53a7d.png",
+    "static/media/status.ecb89818.png": "/static/media/status.ecb89818.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.09131c48.js",
+    "static/css/2.c2cad7ad.chunk.css",
+    "static/js/2.ca5eb414.chunk.js",
+    "static/css/main.c83d1a2c.chunk.css",
+    "static/js/main.419dd4ca.chunk.js"
+  ]
+}
