@@ -1,0 +1,66 @@
+#app-map {
+  height: 100%;
+}
+
+.app {
+  position: relative;
+  height: 100%;
+}
+
+/* ------------- Popup ------------- */
+
+.mapboxgl-popup-content {
+  width: 20rem;
+}
+
+.mapboxgl-popup-content .sc-card-header {
+  padding: var(--padding-sm) 0 !important;
+}
+
+.mapboxgl-popup-content .sc-card-header h5 {
+  text-decoration: underline;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.mapboxgl-popup-content .sc-card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.mapboxgl-popup-content .sc-card-body > div {
+  width: 100%;
+}
+
+.mapboxgl-popup-content .sc-card-body > div:nth-of-type(2) {
+  margin-top: var(--padding-sm);
+}
+
+@media only screen and (min-width: 600px) {
+  .mapboxgl-popup-content {
+    width: 40rem;
+  }
+
+  .mapboxgl-popup-content .sc-card-body {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .mapboxgl-popup-content .sc-card-body > div {
+    width: calc(50% - var(--padding-md) / 2);
+  }
+
+  .mapboxgl-popup-content .sc-card-body > div:nth-of-type(2) {
+    margin-top: 0;
+  }
+}
+
+.mapboxgl-popup-content .sc-card-body img {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+}
+
+.mapboxgl-popup-content .sc-card-footer {
+  font-size: 1.1rem;
+}

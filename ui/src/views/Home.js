@@ -146,7 +146,11 @@ export default function Home() {
             loop
             frameBorder="0"
           >
-            <source src="https://youtu.be/wTYi2W18REE" />
+            <source
+              src="https://res.cloudinary.com/dnzambf4m/video/upload/v1641930582/ICE_Landing_Page_rusy2d.webm"
+              type="video/webm"
+            />
+            {/* <source src="https://youtu.be/wTYi2W18REE" /> */}
           </video>
         </VideoWrapper>
       </BannerWrapper>

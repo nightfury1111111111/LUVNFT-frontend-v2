@@ -17,7 +17,7 @@ import Home from "views/Home.js";
 import About from "views/About.js";
 // import Market from "views/Market.js";
 import NftDetail from "views/NftDetail.js";
-import World from "views/World";
+import World from "components/map/components/app.js";
 
 import Store from "./stores/store";
 import Marketplace from "views/Marketplace";

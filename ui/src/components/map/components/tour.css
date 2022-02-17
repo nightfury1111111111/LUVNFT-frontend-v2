@@ -1,0 +1,29 @@
+.app-tour-controls {
+  position: absolute;
+  bottom: var(--padding-md);
+  left: var(--padding-md);
+  right: var(--padding-md);
+  padding: var(--padding-sm);
+  background-color: var(--color-light);
+  border: var(--border-thickness) solid var(--color-primary-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-md);
+  transition: all var(--transition-sm);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1000;
+}
+
+@media only screen and (min-width: 600px) {
+  .app-tour-controls {
+    width: 36rem;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+}
+
+.app-tour-controls.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
