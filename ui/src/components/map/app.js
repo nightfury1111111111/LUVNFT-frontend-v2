@@ -64,7 +64,7 @@ class Map extends Component {
       <div className="map-field">
         <div id="app-map"></div>
 
-        <div className={this.getSlideClasses()}>
+        <div className={this.getSlideClasses()} style={{position:"absolute"}}>
           <Search
             types={this.state.types}
             rooms={this.state.rooms}
