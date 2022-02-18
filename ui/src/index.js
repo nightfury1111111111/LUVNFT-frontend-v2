@@ -2,6 +2,16 @@ import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 
+import "stylecraft/dist/stylecraft.css";
+import "mapbox-gl/dist/mapbox-gl.css";
+import "./styles/index.css";
+import "./styles/fonts.css";
+import "./styles/input-range.css";
+import "./styles/hacks.css";
+import "./styles/mapbox-hacks.css";
+
+import * as serviceWorker from "./serviceWorker";
+
 import "./styles/output.css";
 import theme from "./theme";
 
@@ -17,10 +27,11 @@ import Home from "views/Home.js";
 import About from "views/About.js";
 // import Market from "views/Market.js";
 import NftDetail from "views/NftDetail.js";
-import World from "components/map/components/app.js";
 
 import Store from "./stores/store";
 import Marketplace from "views/Marketplace";
+import Map from "components/map/app";
+
 // const store = Store.store;
 // const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
@@ -41,7 +52,6 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
         <Header />
-        <div>
           <Switch>
             <Route exact path="/">
               <Home />
@@ -56,13 +66,15 @@ function App() {
               <NftDetail />
             </Route>
             <Route path="/world">
-              <World />
+              <Map />
             </Route>
+          {/* <Map /> */}
           </Switch>
-        </div>
       </Router>
       <GlobalStyle />
     </ThemeProvider>
   );
 }
 ReactDOM.render(<App />, document.getElementById("root"));
+
+serviceWorker.unregister();
