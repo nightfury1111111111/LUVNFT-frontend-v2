@@ -30,7 +30,7 @@ import NftDetail from "views/NftDetail.js";
 
 import Store from "./stores/store";
 import Marketplace from "views/Marketplace";
-import Map from "components/map/app";
+// import Map from "components/map/app";
 
 // const store = Store.store;
 // const emitter = Store.emitter;
@@ -65,9 +65,9 @@ function App() {
             <Route path="/nft/:id">
               <NftDetail />
             </Route>
-            <Route path="/world">
+            {/* <Route path="/world">
               <Map />
-            </Route>
+            </Route> */}
           {/* <Map /> */}
           </Switch>
       </Router>
