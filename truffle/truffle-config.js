@@ -1,46 +1,39 @@
-// truffle migrate --reset --network harmony_testnet
-
-require("dotenv").config();
-const { TruffleProvider } = require("@harmony-js/core");
-
-require("dotenv").config();
-var HDWalletProvider = require("truffle-hdwallet-provider");
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const privateKeyTest =
+  "cf83092b2b6dd847a02a0d039ce51b2c887e9f9d4252b8c09a13dd5c36871fb7";
 
 module.exports = {
+  plugins: ["truffle-contract-size"],
   networks: {
     harmony_testnet: {
-      network_id: "2",
       provider: () => {
-        const truffleProvider = new TruffleProvider(
-          process.env.TESTNET_URL,
-          {},
-          { shardID: 0, chainId: 2 },
-          { gasLimit: process.env.GAS_LIMIT, gasPrice: process.env.GAS_PRICE }
-        );
-        const newAcc = truffleProvider.addByPrivateKey(
-          process.env.TESTNET_PRIVATE_KEY
-        );
-        truffleProvider.setSigner(newAcc);
-        return truffleProvider;
+        // use private key
+        return new HDWalletProvider({
+          //mnemonic,
+          providerOrUrl: "https://api.s0.b.hmny.io", // https://api.s0.t.hmny.io for mainnet
+          privateKeys: [privateKeyTest],
+
+          //derivationPath: `m/44'/1023'/0'/0/`
+        });
       },
-      skipDryRun: true,
+      network_id: 1666700000, // 1666600000 for mainnet
+      // gas: 2000000, // <--- Twice as much
+      // gasPrice: 10000000000,
     },
-    rinkeby: {
-      host: "localhost",
-      provider: function () {
-        return new HDWalletProvider(
-          process.env.MNEMONIC_TEST_METAMASK,
-          "https://rinkeby.infura.io/v3/" + process.env.ENDPOINT_TEST_METAMASK
-        );
+    testnetHar: {
+      provider: () => {
+        if (!privateKeyTest.trim()) {
+          throw new Error(
+            "Please enter a private key with funds, you can use the default one"
+          );
+        }
+        return new HDWalletProvider({
+          privateKeys: [privateKeyTest],
+          providerOrUrl: "https://api.s0.b.hmny.io",
+        });
       },
-      network_id: 4,
-      gas: 10777900,
-      gasPrice: 10000000000,
+      network_id: 1666700000,
     },
-  },
-  // Set default mocha options here, use special reporters etc.
-  mocha: {
-    // timeout: 100000
   },
   // Configure your compilers
   compilers: {
@@ -54,7 +47,14 @@ module.exports = {
       //  },
       //  evmVersion: "byzantium"
       // }
+      settings: {
+        // See the solidity docs for advice about optimization and evmVersion
+        optimizer: {
+          enabled: false,
+          runs: 200,
+        },
+      },
     },
   },
-  contracts_build_directory: "../ui/src/abi",
 };
+
