@@ -211,7 +211,8 @@ class Store {
     }
     store.setStore({ account: accounts[0] });
     // this.sendTestTransaction(web3);
-    const contractAddress = WorldNFT.networks["2"].address;
+    // const contractAddress = WorldNFT.networks["2"].address;
+    const contractAddress = WorldNFT.networks["1666700000"].address;
     console.log("WorldNFT contract", contractAddress);
     const abi = WorldNFT.abi;
     const dapp_contract = new web3.eth.Contract(abi, contractAddress);

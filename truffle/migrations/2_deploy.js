@@ -21,8 +21,8 @@ module.exports = async function (deployer, network, accounts) {
   await deployer.deploy(NFTDescriptor);
   await deployer.link(NFTDescriptor, LuvNFT);
   await deployer.deploy(LuvNFT, { gas: 10000000 });
-  let nftInstance = await LuvNFT.deployed();
-  console.log("LNV contract deployed at : ", nftInstance);
+  await LuvNFT.deployed();
+  // let nftInstance = await LuvNFT.deployed();
   // await nftInstance.mint("New York", svg_ny);
   // await nftInstance.mint("London", svg_london);
   // await nftInstance.mint("Mumbai", svg_mumbai);

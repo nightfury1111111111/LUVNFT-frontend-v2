@@ -145,7 +145,7 @@ export default function NftDetail() {
 
     const isNftOwned = owner == store.getStore().account ? true : false;
     const mintFreshNft =
-      owner == "0xBd708eE49f961E7e72a094D13f65fbD448db5098" ? true : false;
+      owner == "0xfEd7ADe2bf5D99934e0F5a991F1Ea3D89a444885" ? true : false;
     let auctionObj = await contract.methods.getAuctionInfo(id).call();
     let locn_nft = {
       token_id: id,
@@ -155,7 +155,7 @@ export default function NftDetail() {
       svg_image: nft.svg_image,
       price: price,
       isNftOwned: isNftOwned,
-      // mintFreshNft: mintFreshNft,
+      mintFreshNft: mintFreshNft,
       mintFreshNft: true,
       hasAuctionStarted: auctionObj.isExist,
     };

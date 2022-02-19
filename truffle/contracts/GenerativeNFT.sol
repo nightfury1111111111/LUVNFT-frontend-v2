@@ -89,7 +89,7 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    'This NFT represents a top 200 cities in the planet Earth\\n'
+                    'LUV NFT is made by Hahz Terry and Jay Lin\\n'
                 )
             );
     }
