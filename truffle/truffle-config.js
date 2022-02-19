@@ -19,6 +19,8 @@ module.exports = {
       network_id: 1666700000, // 1666600000 for mainnet
       // gas: 2000000, // <--- Twice as much
       // gasPrice: 10000000000,
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200,
     },
     testnetHar: {
       provider: () => {
@@ -38,7 +40,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
-      version: "^0.6.12", // Fetch exact version from solc-bin (default: truffle's version)
+      version: "^0.7.6", // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
       //  optimizer: {
@@ -50,7 +52,7 @@ module.exports = {
       settings: {
         // See the solidity docs for advice about optimization and evmVersion
         optimizer: {
-          enabled: false,
+          enabled: true,
           runs: 200,
         },
       },
