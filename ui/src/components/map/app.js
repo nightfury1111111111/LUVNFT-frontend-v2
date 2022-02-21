@@ -361,12 +361,6 @@ class Map extends Component {
   };
 
   InitializeMap = () => {
-    const placesInfo = { 
-      type: "FeatureCollection",
-      features:store.getStore().nftList
-    };
-    console.log(store.getStore().dapp_contract)
-    console.log(placesInfo)
     this.mapcraft = new Mapcraft({
       env: {
         mapbox: {

@@ -18,6 +18,7 @@ import salePic from "../assets/img/home.png";
 import stadiumPic from "../assets/img/stadium.png";
 import statusPic from "../assets/img/status.png";
 import hotelPic from "../assets/img/luv-hotel.png";
+import backgroundVideo from "../assets/LUVNFTEstate.mp4";
 
 const BannerWrapper = styled.div`
   width: 100%;
@@ -164,8 +165,9 @@ export default function Home() {
           loop
           // frameBorder="0"
         >
-          <source src="https://youtu.be/wTYi2W18REE" type="video/mov" />
+          {/* <source src="https://youtu.be/wTYi2W18REE" type="video/mp4" /> */}
           {/* <source src="https://res.cloudinary.com/dnzambf4m/video/upload/v1641930582/ICE_Landing_Page_rusy2d.webm" /> */}
+          <source src="LUVNFTEstate.webm" type="video/mp4" />
         </video>
         <TitleWrapper>
           <div>OWN A PART OF</div>
