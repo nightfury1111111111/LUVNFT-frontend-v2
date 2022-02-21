@@ -404,9 +404,9 @@ class Map extends Component {
     this.mapcraft.load().then(() => {
       this.handleFilter();
 
-      setTimeout(() => {
-        this.handleGeoJson();
-      }, 2000);
+      // setTimeout(() => {
+      //   this.handleGeoJson();
+      // }, 2000);
 
       setTimeout(() => {
         this.handleChangeSlide(true);

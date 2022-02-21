@@ -3,3 +3,6 @@ body,
 #root {
   height: 100%;
 }
+.dropdown:hover .dropdown-menu {
+  display: block;
+}

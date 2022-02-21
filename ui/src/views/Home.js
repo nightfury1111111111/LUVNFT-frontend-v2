@@ -21,7 +21,7 @@ import hotelPic from "../assets/img/luv-hotel.png";
 
 const BannerWrapper = styled.div`
   width: 100%;
-  height: 340px;
+  // height: 340px;
   padding: 15px;
   margin-bottom: 15px;
   display: flex;
@@ -36,14 +36,15 @@ const BannerWrapper = styled.div`
 `;
 
 const VideoWrapper = styled.div`
-  width: 40%;
-  height: 100%;
+  position: relative;
+  width: 100%;
+  // height: 100%;
   text-align: center;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
     height: 250px;
-    display:flex;
-    flex-direction:column;
+    display: flex;
+    flex-direction: column;
   }
 `;
 
@@ -53,15 +54,18 @@ const IframeWrapper = styled.iframe`
 `;
 
 const TitleWrapper = styled.div`
-  font-size: 30px;
+  position: absolute;
+  font-family:"Archivo Black";
+  width: 100%;
+  top: 150px;
+  font-size: 60px;
   color: #dc1fff;
   display: flex;
   flex-direction: column;
-  margin-left: 40px;
   margin-top: 40px;
   ${({ theme }) => theme.mediaQueries.sm} {
-    margin-left: 0;
-    margin-top: 0;
+    top: 50px;
+    font-size:30px;
   }
 `;
 
@@ -122,7 +126,7 @@ const BackgroundWrapper = styled.div`
 
 const NftNameWrapper = styled.span`
   color: #000000;
-  font-family:Montserrat;
+  font-family: Montserrat;
   font-weight: 900;
   font-style: normal;
   line-height: 96%;
@@ -134,29 +138,42 @@ export default function Home() {
 
   return (
     <div>
-      <BannerWrapper>
+      {/* <BannerWrapper> */}
+      <VideoWrapper>
+        <video
+          class="DG_video__2_qUl"
+          id="my-video"
+          style={{
+            backgroundSize: "cover",
+            backgroundPosition: "50% 50%",
+            // position: "absolute",
+            margin: "auto",
+            width: "100%",
+            height: "100%",
+            right: "-100%",
+            bottom: "-100%",
+            top: "-100%",
+            left: "-100%",
+            objectFit: "cover",
+            zIndex: "-100",
+          }}
+          // controls
+          muted
+          // playsinline
+          autoPlay
+          loop
+          // frameBorder="0"
+        >
+          <source src="https://youtu.be/wTYi2W18REE" type="video/mov" />
+          {/* <source src="https://res.cloudinary.com/dnzambf4m/video/upload/v1641930582/ICE_Landing_Page_rusy2d.webm" /> */}
+        </video>
         <TitleWrapper>
           <div>OWN A PART OF</div>
           <div>THE METAVERSE</div>
         </TitleWrapper>
-        <VideoWrapper>
-          <video
-            // class="DG_video__2_qUl"
-            // id="my-video"
-            controls
-            autoPlay
-            loop
-            frameBorder="0"
-          >
-            <source
-              src="https://res.cloudinary.com/dnzambf4m/video/upload/v1641930582/ICE_Landing_Page_rusy2d.webm"
-              type="video/webm"
-            />
-            {/* <source src="https://youtu.be/wTYi2W18REE" /> */}
-          </video>
-        </VideoWrapper>
-      </BannerWrapper>
-      <div className="flex flex-col">
+      </VideoWrapper>
+      {/* </BannerWrapper> */}
+      <div className="flex flex-col" style={{ marginTop: "15px" }}>
         <div className="flex flex-col justify-start mb-2">
           <ExploreWrapper to={`/market`} className="rounded p-1 mb-2">
             <span className="text-4xl">🗺</span>
@@ -180,7 +197,7 @@ export default function Home() {
               </div>
             </CardDivWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
-              <BackgroundWrapper bgPath={country_icon_svg} className="m-2 mb-0">
+              <BackgroundWrapper className="m-2 mb-0">
                 <img src={homePic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
@@ -193,7 +210,7 @@ export default function Home() {
               to={`/market`}
               className="rounded-lg flex flex-col cursor-pointer"
             >
-              <BackgroundWrapper bgPath={city_icon_svg} className="m-2 mb-0">
+              <BackgroundWrapper className="m-2 mb-0">
                 <img src={hotelPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
@@ -204,7 +221,7 @@ export default function Home() {
             </CardLinkWrapper>
             <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
               <BackgroundWrapper
-                bgPath={landmark_icon_svg}
+                // bgPath={landmark_icon_svg}
                 className="m-2 mb-0"
               >
                 <img src={statusPic} />
