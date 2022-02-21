@@ -269,6 +269,8 @@ export default function Marketplace() {
     setFilterArray([...filterArray]);
   };
 
+  console.log(filterArray)
+
   const addFilter=(filter)=>{
     setSelected(values[filter]);
     if (filter < 5) {
@@ -281,7 +283,6 @@ export default function Marketplace() {
         }
       }
     } else if (filter == 5) {
-      console.log(filterArray.indexOf(filter));
       if (filterArray.indexOf(values[5]) > -1) {
         return;
       }
