@@ -72,7 +72,7 @@ contract LuvNFT is ERC721, Ownable {
     constructor() public ERC721("WorldNFT", "WNFT") {}
 
     struct Location {
-        string nft_info; //contains name, long and lati 
+        string nft_info; //contains name, long and lati
         bool isExist;
     }
     struct Auction {
@@ -102,6 +102,7 @@ contract LuvNFT is ERC721, Ownable {
     event AuctionEnded(address bidAddress, uint256 bidValue);
     event BidRejected(address bidAddress, uint256 bidValue);
     event BidWithdrawn(address bidAddress, uint256 bidValue);
+    event ChangeNFTInfo(uint256 changedId);
 
     mapping(uint256 => Location) private _locationDetails;
     mapping(uint256 => uint256) public tokenIdToPrice;
@@ -119,7 +120,7 @@ contract LuvNFT is ERC721, Ownable {
         return _locationDetails[tokenId];
     }
 
-		//create svg file automatically.
+    //create svg file automatically.
     function getSVG(
         uint256 tokenId,
         string memory latitude,
@@ -180,15 +181,18 @@ contract LuvNFT is ERC721, Ownable {
         return pendingReturnForIdx.get(addr);
     }
 
-    function mint(string memory nft_info, uint256 price)
-        public
-        onlyOwner
-    {
+    function mint(string memory nft_info, uint256 price) public onlyOwner {
         _locationDetails[nextId] = Location(nft_info, true);
         // tokenIdToPrice[nextId] = 2000000000000000000; //1 ONE=1e18 wei
         tokenIdToPrice[nextId] = price; //1 ONE=1e18 wei
         _safeMint(msg.sender, nextId);
         nextId++;
+    }
+
+    function changeNftInfo(string nft_info, uint256 tokenId) external onlyOwner {
+        require(_locationDetails[_tokenId].isExist, "Token doesn't exist");
+        _locationDetails[tokenId] = Location(nft_info, true);
+        emit ChangeNFTInfo(tokenId);
     }
 
     function buy(uint256 _tokenId) external payable {
@@ -320,7 +324,13 @@ contract LuvNFT is ERC721, Ownable {
         _auctions[_tokenId] = auc;
     }
 
-    function increaseBid(uint256 _tokenId) external payable {}
+    function increaseBid(uint256 _tokenId) external payable {
+        
+    }
+
+    // function setPrice(uint256 _tokenId) external payable {
+        
+    // }
 
     function _beforeTokenTransfer(
         address from,

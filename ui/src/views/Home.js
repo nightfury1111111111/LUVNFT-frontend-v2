@@ -68,13 +68,15 @@ const TitleWrapper = styled.div`
 const ExploreWrapper = styled(Link)`
   background: #000000;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
+  border-radius: 15px;
   z-index: 10;
   color: #ffffff;
   line-height: 96%;
   font-size: 45px;
   width: 100px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   margin-left: 56px;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 90%;

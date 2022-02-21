@@ -25,16 +25,17 @@ const tokenInfo = {
 const getContract = async () => {
   const contract = new web3.eth.Contract(
     LuvNFT.abi,
-    "0x9bfcbec750f855a9d91b57c66e31754b34e072b2"
+    "0x7c9D35047469dA7C83Bf8b54bccDDe174D0b8d19"
   );
   return contract;
 };
 
-async function integrate() {
+//check svg generate.
+async function generateSVG() {
   const contract = await getContract();
   const svgData=await contract.methods.getSVG(50,"90","290","Moscow").call();
   const image = extractJSONFromURI(svgData).image;
   console.log("svg: ", image);
 }
 
-integrate();
+generateSVG();

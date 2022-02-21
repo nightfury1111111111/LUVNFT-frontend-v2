@@ -6,7 +6,7 @@ import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
 // import LocationNFT from "../abi/LocationNFT.json";
 // import Counter from "../abi/Counter.json";
-import WorldNFT from "../abi/WorldNFT.json";
+import LuvNFT from "../abi/LuvNFT.json";
 
 const Dispatcher = require("flux").Dispatcher;
 const Emitter = require("events").EventEmitter;
@@ -82,9 +82,9 @@ class Store {
     const balance = await web3.eth.getBalance(myAddress);
     console.log("My balance: ", balance / 1e18);
     store.setStore({ account: myAddress });
-    const contractAddress = WorldNFT.networks["2"].address;
-    console.log("WorldNFT contract", contractAddress);
-    const abi = WorldNFT.abi;
+    const contractAddress = LuvNFT.networks["2"].address;
+    console.log("LuvNFT contract", contractAddress);
+    const abi = LuvNFT.abi;
     const dapp_contract = new web3.eth.Contract(abi, contractAddress);
     store.setStore({ dapp_contract: dapp_contract });
   };
@@ -95,9 +95,9 @@ class Store {
   //       const getAccount = await onewallet.getAccount();
   //       console.log("onewallet ", getAccount);
   //       store.setStore({ account: getAccount.address });
-  //       const abi = WorldNFT.abi;
-  //       const contractAddress = WorldNFT.networks["2"].address;
-  //       console.log("WorldNFT contract", contractAddress);
+  //       const abi = LuvNFT.abi;
+  //       const contractAddress = LuvNFT.networks["2"].address;
+  //       console.log("LuvNFT contract", contractAddress);
   //       const contract = hmy.contracts.createContract(abi, contractAddress);
   //       console.log(contract.methods);
   //       store.setStore({ dapp_contract: contract });
@@ -177,7 +177,7 @@ class Store {
   };
 
   sendTestTransaction = async (web3) => {
-    const receiverAddress = "0x2f539d46a3bc63847e3c0fA121360dA17b772BBb";
+    const receiverAddress = "0x7c9D35047469dA7C83Bf8b54bccDDe174D0b8d19";
     const gas = 6721900;
     const gasPrice = new BN(await web3.eth.getGasPrice()).mul(new BN(1));
 
@@ -211,12 +211,20 @@ class Store {
     }
     store.setStore({ account: accounts[0] });
     // this.sendTestTransaction(web3);
-    // const contractAddress = WorldNFT.networks["2"].address;
-    const contractAddress = WorldNFT.networks["1666700000"].address;
-    console.log("WorldNFT contract", contractAddress);
-    const abi = WorldNFT.abi;
+    // const contractAddress = LuvNFT.networks["2"].address;
+    const contractAddress = LuvNFT.networks["1666700000"].address;
+    console.log("LuvNFT contract", contractAddress);
+    const abi = LuvNFT.abi;
     const dapp_contract = new web3.eth.Contract(abi, contractAddress);
     store.setStore({ dapp_contract: dapp_contract });
+
+    let tmpList=[]
+    let nftCount=await dapp_contract.methods.nextId().call();
+    for(let j=0;j<nftCount;j++){
+      const nft = await dapp_contract.methods.getTokenDetails(j).call();
+      tmpList.push(JSON.parse(nft.nft_info));
+    }
+    store.setStore({nftList:tmpList});
   };
 
   configure = async (payload) => {

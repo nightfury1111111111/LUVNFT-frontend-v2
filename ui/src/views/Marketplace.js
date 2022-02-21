@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useSelector, useContext } from "react";
+import { extractJSONFromURI } from "../utils/extractJSONFromURI";
 import {
   Units,
   Unit,
@@ -14,12 +15,18 @@ import { Iconly } from "react-iconly";
 import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 
 import { useHistory } from "react-router-dom";
+import homePic from "../assets/img/home-m-2022.02.10-21_27_53.png"
+import storePic from "../assets/img/home.png"
+import hotelPic from "../assets/img/luv-hotel.png"
+import landPic from "../assets/img/status.png"
+import stadiumPic from "../assets/img/stadium.png"
 
 import Store from "../stores/store";
 import styled from "styled-components";
 const store = Store.store;
 const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
+
 
 const MarketplaceWrapper = styled.div`
   height: 90vh;
@@ -179,6 +186,51 @@ const SortWrapper = styled.div`
   width: 200px;
 `;
 
+const NFTCardWrapper = styled.div`
+  width: 350px;
+  height: 350px;
+  color: white;
+  background-image: url(${(props) => {
+      switch (props.type) {
+        case "apartment":
+          return homePic;
+        case "land":
+          return landPic;
+        default:
+          return;
+      }
+    }}),
+    url(${(props) => props.bgPath});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 50%, 100% 100%;
+  cursor: pointer;
+`;
+
+const AnimatedDiv = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  color: red;
+  animation-name: exam;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  @keyframes exam {
+    0% {
+      color: red;
+      // background-color: red;
+    }
+    50% {
+      color: green;
+      // background-color: blue;
+    }
+    100% {
+      color: red;
+      // background-color: red;
+    }
+  }
+`;
+
 export default function Marketplace() {
   const route_history = useHistory();
   const [nftCount, setNftCount] = useState(0);
@@ -300,7 +352,9 @@ export default function Marketplace() {
 
       //From blockchain
       for (var i = 0; i < nftCount; i++) {
+        // const nft = await contract.methods.getTokenDetails(i).call();
         const nft = await contract.methods.getTokenDetails(i).call();
+        console.log(JSON.parse(nft.nft_info));
         const owner = await contract.methods.getOwnerOf(i).call();
         let price = await contract.methods.getPriceOf(i).call();
         //For ETH
@@ -308,14 +362,26 @@ export default function Marketplace() {
         console.log("owner", owner);
         price = fromWei(price, Units.one);
         const isNftOwned = owner == store.getStore().account ? true : false;
+        const svg_image = await contract.methods
+          .getSVG(
+            i,
+            JSON.parse(nft.nft_info).geometry.coordinates[0],
+            JSON.parse(nft.nft_info).geometry.coordinates[1],
+            JSON.parse(nft.nft_info).properties.title
+          )
+          .call();
         let nftObj = {
           tokenId: i,
-          name: nft.location_name,
-          svg_image: nft.svg_image,
+          name: JSON.parse(nft.nft_info).properties.title,
+          svg_image: extractJSONFromURI(svg_image).image,
+          type:JSON.parse(nft.nft_info).properties.type,
           price: price,
           owner: owner,
           isNftOwned: isNftOwned,
+          longitude: JSON.parse(nft.nft_info).geometry.coordinates[0],
+          latitude: JSON.parse(nft.nft_info).geometry.coordinates[1],
         };
+        console.log("nft", nftObj)
         tmpList.push(nftObj);
       }
       setNftList(tmpList);
@@ -342,6 +408,11 @@ export default function Marketplace() {
     init();
   }, []);
 
+  //74.1234324=>74
+  const compress=(data)=>{
+    console.log(Math.floor(data))
+  }
+
   const svgStr = `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
   <g id="Layer_1">
    <title>Layer 1</title>
@@ -367,8 +438,6 @@ export default function Marketplace() {
       fontSize: "22px",
     },
   };
-
-  const namesss = "ssss";
 
   const DropdownButton = () => (
     <FormControl>
@@ -647,117 +716,155 @@ export default function Marketplace() {
               <NftContentWrapper className="grid grid-cols-3 gap-4">
                 {nftList.map((nft, idx) => {
                   return (
-                    <NftItemWrapper
-                      className="w-full flex flex-col items-center justify-center rounded-lg cursor-pointer hover:shadow-md h-full"
-                      onClick={() => routeToDetail(nft.tokenId)}
+                    <NFTCardWrapper
+                      bgPath={nft.svg_image}
+                      type={nft.type}
                       key={idx}
+                      onClick={() => routeToDetail(nft.tokenId)}
                     >
-                      {/* {nft.isNftOwned && (
-                        <div className="p-2 font-semibold">Owned</div>
-                      )} */}
-                      <SvgWrapper className="relative w-full p-1 flex justify-center m-2">
-                        <div
-                          dangerouslySetInnerHTML={{ __html: nft.svg_image }}
-                        ></div>
-                        {/* <div dangerouslySetInnerHTML={{ __html: svgStr }}></div> */}
-                        {/* <img
-                        src={getTestSvgUri()}
-                        width="100px"
-                        height="100px"
-                      ></img> */}
-                      </SvgWrapper>
-                      <LineWrapper className="flex justify-between w-full">
-                        <EmojiWrapper className="ml-2 flex flex-row">
-                          💜
-                          <BidCountWrapper>&nbsp;23</BidCountWrapper>
-                        </EmojiWrapper>
-                        <div className="mr-2">
-                          <span
-                            style={{
-                              color: "#5D5D5D",
-                              fontFamily: "Poppins",
-                              fontWeight: 600,
-                              fontSize: "20px",
-                              fontStyle: "normal",
-                              lineHeight: "25px",
-                            }}
-                          >
-                            current bid
-                          </span>
-                        </div>
-                      </LineWrapper>
                       <div
-                        className="flex justify-between w-full"
                         style={{
-                          height: "10%",
-                          fontFamily: "Poppins",
+                          margin: "auto",
+                          marginTop: "10%",
+                          fontSize: "20px",
+                          fontWeight: "bold",
+                          textAlign: "center",
+                          width: "94%",
+                          color: "white",
                         }}
                       >
-                        <div className="ml-2">
-                          <span
-                            className="uppercase"
-                            style={{
-                              color: "#DC1FFF",
-                              fontWeight: 600,
-                              fontSize: "21px",
-                              fontStyle: "normal",
-                              lineHeight: "28px",
-                            }}
-                          >
-                            {nft.name}
-                          </span>
-                        </div>
-                        <div className="mr-2">
-                          <span
-                            className="uppercase"
-                            style={{
-                              color: "#00FFA3",
-                              fontWeight: 600,
-                              fontSize: "21px",
-                              fontStyle: "normal",
-                              lineHeight: "28px",
-                            }}
-                          >
-                            {nft.price}&nbsp;
-                          </span>
-                          <span
-                            className="uppercase"
-                            style={{
-                              color: "#DC1FFF",
-                              fontWeight: 600,
-                              fontSize: "20px",
-                              fontStyle: "normal",
-                              lineHeight: "28px",
-                            }}
-                          >
-                            ONE
-                          </span>
-                        </div>
+                        {nft.name}
                       </div>
-                      <hr />
-                      <LineWrapper className="flex justify-between w-full mt-2">
-                        <div className="ml-2">
-                          <BidCountWrapper>Longitude</BidCountWrapper>
-                          {/* <span
-                            className="uppercase"
-                            style={{
-                              color: "#00FFA3",
-                              fontWeight: 600,
-                              fontSize: "21px",
-                              fontStyle: "normal",
-                              lineHeight: "28px",
-                            }}
-                          >
-                            {nft.owner}&nbsp;
-                          </span> */}
+                      {nft.isNftOwned && (
+                        <AnimatedDiv>Owned by you.</AnimatedDiv>
+                      )}
+                      {nft.isNftOwned ? (
+                        <div style={{ marginLeft: "10%", marginTop: "42%" }}>
+                          lat: {Number(nft.latitude).toFixed(4)} N, long:
+                          {Number(nft.longitude).toFixed(4)} E
                         </div>
-                      </LineWrapper>
-                      <LineWrapper className="flex justify-between w-full mt-2">
-                        <div className="ml-2">
-                          <BidCountWrapper>Latitude</BidCountWrapper>
+                      ) : (
+                        <div style={{ marginLeft: "10%", marginTop: "50%" }}>
+                          lat: {Number(nft.latitude).toFixed(4)} N, long:
+                          {Number(nft.longitude).toFixed(4)} E
                         </div>
-                      </LineWrapper>
-                    </NftItemWrapper>
+                      )}
+                      <div style={{ marginLeft: "10%" }}>ID: {nft.tokenId}</div>
+                      <div style={{ marginLeft: "10%" }}>
+                        Price: {nft.price} ONE
+                      </div>
+                    </NFTCardWrapper>
+                    // <NftItemWrapper
+                    //   className="w-full flex flex-col items-center justify-center rounded-lg cursor-pointer hover:shadow-md h-full"
+                    //   onClick={() => routeToDetail(nft.tokenId)}
+                    //   key={idx}
+                    // >
+                    //   {/* {nft.isNftOwned && (
+                    //     <div className="p-2 font-semibold">Owned</div>
+                    //   )} */}
+                    //   <SvgWrapper className="relative w-full p-1 flex justify-center m-2">
+                    //     <div
+                    //       dangerouslySetInnerHTML={{ __html: nft.svg_image }}
+                    //     ></div>
+                    //     {/* <div dangerouslySetInnerHTML={{ __html: svgStr }}></div> */}
+                    //     {/* <img
+                    //     src={getTestSvgUri()}
+                    //     width="100px"
+                    //     height="100px"
+                    //   ></img> */}
+                    //   </SvgWrapper>
+                    //   <LineWrapper className="flex justify-between w-full">
+                    //     <EmojiWrapper className="ml-2 flex flex-row">
+                    //       💜
+                    //       <BidCountWrapper>&nbsp;23</BidCountWrapper>
+                    //     </EmojiWrapper>
+                    //     <div className="mr-2">
+                    //       <span
+                    //         style={{
+                    //           color: "#5D5D5D",
+                    //           fontFamily: "Poppins",
+                    //           fontWeight: 600,
+                    //           fontSize: "20px",
+                    //           fontStyle: "normal",
+                    //           lineHeight: "25px",
+                    //         }}
+                    //       >
+                    //         current bid
+                    //       </span>
+                    //     </div>
+                    //   </LineWrapper>
+                    //   <div
+                    //     className="flex justify-between w-full"
+                    //     style={{
+                    //       height: "10%",
+                    //       fontFamily: "Poppins",
+                    //     }}
+                    //   >
+                    //     <div className="ml-2">
+                    //       <span
+                    //         className="uppercase"
+                    //         style={{
+                    //           color: "#DC1FFF",
+                    //           fontWeight: 600,
+                    //           fontSize: "21px",
+                    //           fontStyle: "normal",
+                    //           lineHeight: "28px",
+                    //         }}
+                    //       >
+                    //         {nft.name}
+                    //       </span>
+                    //     </div>
+                    //     <div className="mr-2">
+                    //       <span
+                    //         className="uppercase"
+                    //         style={{
+                    //           color: "#00FFA3",
+                    //           fontWeight: 600,
+                    //           fontSize: "21px",
+                    //           fontStyle: "normal",
+                    //           lineHeight: "28px",
+                    //         }}
+                    //       >
+                    //         {nft.price}&nbsp;
+                    //       </span>
+                    //       <span
+                    //         className="uppercase"
+                    //         style={{
+                    //           color: "#DC1FFF",
+                    //           fontWeight: 600,
+                    //           fontSize: "20px",
+                    //           fontStyle: "normal",
+                    //           lineHeight: "28px",
+                    //         }}
+                    //       >
+                    //         ONE
+                    //       </span>
+                    //     </div>
+                    //   </div>
+                    //   <hr />
+                    //   <LineWrapper className="flex justify-between w-full mt-2">
+                    //     <div className="ml-2">
+                    //       <BidCountWrapper>Longitude</BidCountWrapper>
+                    //       {/* <span
+                    //         className="uppercase"
+                    //         style={{
+                    //           color: "#00FFA3",
+                    //           fontWeight: 600,
+                    //           fontSize: "21px",
+                    //           fontStyle: "normal",
+                    //           lineHeight: "28px",
+                    //         }}
+                    //       >
+                    //         {nft.owner}&nbsp;
+                    //       </span> */}
+                    //     </div>
+                    //   </LineWrapper>
+                    //   <LineWrapper className="flex justify-between w-full mt-2">
+                    //     <div className="ml-2">
+                    //       <BidCountWrapper>Latitude</BidCountWrapper>
+                    //     </div>
+                    //   </LineWrapper>
+                    // </NftItemWrapper>
                   );
                 })}
               </NftContentWrapper>

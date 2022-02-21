@@ -4,6 +4,9 @@ import Mapcraft from "mapcraft";
 import Search from "./search";
 import Tour from "./tour";
 import Page from "./page";
+import Store from "../../stores/store";
+const store = Store.store;
+const emitter = Store.emitter;
 
 class Map extends Component {
   state = {
@@ -15,41 +18,41 @@ class Map extends Component {
       { slug: "solfood", name: "🍔 SOLFOOD", checked: true },
       { slug: "apartment", name: "🏢 APARTMENT", checked: false },
       { slug: "monument", name: "🗽 MONUMENT", checked: false },
-      { slug: "solmobiles", name: "🚗 SOLMOBILES", checked: false },   
+      { slug: "solmobiles", name: "🚗 SOLMOBILES", checked: false },
       { slug: "luv", name: "💜 LUV", checked: true },
-      { slug: "stadium", name: "🏟 STADIUM", checked: true }, 
+      { slug: "stadium", name: "🏟 STADIUM", checked: true },
       { slug: "share", name: "🚪 NFT SHARE", checked: true },
       { slug: "store", name: "🏬 STORE", checked: true },
       { slug: "boat", name: "⛵️ BOAT", checked: true },
-      { slug: "yacht", name: "🛥 YACHT", checked: true } 
+      { slug: "yacht", name: "🛥 YACHT", checked: true },
     ],
     rooms: [
       { slug: "one", name: "One", checked: false },
       { slug: "two", name: "Two", checked: false },
       { slug: "more", name: "More", checked: false },
-      { slug: "any", name: "Any", checked: true }
+      { slug: "any", name: "Any", checked: true },
     ],
     areas: {
       from: 30,
-      to: 150
+      to: 150,
     },
     rents: {
       from: 5000,
-      to: 20000
+      to: 20000,
     },
     deposits: {
       from: 10000,
-      to: 100000
+      to: 100000,
     },
     places: {
       type: "FeatureCollection",
-      features: []
+      features: [],
     },
     slideOpen: false,
     tourActive: false,
     tourIndex: 0,
     pageVisible: false,
-    page: {}
+    page: {},
   };
 
   componentDidMount() {
@@ -64,7 +67,10 @@ class Map extends Component {
       <div className="map-field">
         <div id="app-map"></div>
 
-        <div className={this.getSlideClasses()} style={{position:"absolute"}}>
+        <div
+          className={this.getSlideClasses()}
+          style={{ position: "absolute" }}
+        >
           <Search
             types={this.state.types}
             rooms={this.state.rooms}
@@ -105,11 +111,11 @@ class Map extends Component {
     );
   }
 
-  handleChangePage = pageVisible => {
+  handleChangePage = (pageVisible) => {
     this.setState({ pageVisible });
   };
 
-  handleChangeSlide = slideOpen => {
+  handleChangeSlide = (slideOpen) => {
     this.setState({ slideOpen });
   };
 
@@ -153,11 +159,11 @@ class Map extends Component {
       [">=", "rent", rents.from],
       ["<=", "rent", rents.to],
       [">=", "deposit", deposits.from],
-      ["<=", "deposit", deposits.to]
+      ["<=", "deposit", deposits.to],
     ];
 
     let typesFilter = types
-      .filter(item => item.checked)
+      .filter((item) => item.checked)
       .reduce(
         (total, current) => {
           total.push(["==", "type", current.slug]);
@@ -170,7 +176,7 @@ class Map extends Component {
     filters.push(typesFilter);
 
     let roomsFilter = rooms
-      .filter(item => item.checked)
+      .filter((item) => item.checked)
       .reduce(
         (total, current) => {
           if (current.slug === "one") total.push(["==", "rooms", 1]);
@@ -192,16 +198,16 @@ class Map extends Component {
     let { types, rooms, areas, rents, deposits } = this.state;
 
     let selectedTypes = types
-      .filter(type => type.checked)
-      .map(type => type.slug);
+      .filter((type) => type.checked)
+      .map((type) => type.slug);
 
     let selectedRooms = rooms
-      .filter(room => room.checked)
-      .map(room => room.slug);
+      .filter((room) => room.checked)
+      .map((room) => room.slug);
 
     let places = { ...this.mapcraft.geoJsons.places };
 
-    let features = places.features.filter(feature => {
+    let features = places.features.filter((feature) => {
       let { type, rooms, area, rent, deposit } = feature.properties;
 
       if (
@@ -232,13 +238,13 @@ class Map extends Component {
 
     if (places.features.length)
       this.mapcraft.fitBounds({
-        geoJson: places
+        geoJson: places,
       });
   };
 
-  handleChangeType = event => {
+  handleChangeType = (event) => {
     let slug = event.target.getAttribute("data-type");
-    let types = [...this.state.types].map(type => {
+    let types = [...this.state.types].map((type) => {
       if (type.slug === slug) type.checked = event.target.checked;
 
       return type;
@@ -251,9 +257,9 @@ class Map extends Component {
     this.handleGeoJson();
   };
 
-  handleChangeRoom = event => {
+  handleChangeRoom = (event) => {
     let slug = event.target.getAttribute("data-room");
-    let rooms = [...this.state.rooms].map(room => {
+    let rooms = [...this.state.rooms].map((room) => {
       room.checked = room.slug === slug ? true : false;
 
       return room;
@@ -266,7 +272,7 @@ class Map extends Component {
     this.handleGeoJson();
   };
 
-  handleChangeArea = value => {
+  handleChangeArea = (value) => {
     let areas = { ...this.state.areas };
 
     areas.from = value.min;
@@ -279,7 +285,7 @@ class Map extends Component {
     this.handleGeoJson();
   };
 
-  handleChangeRent = value => {
+  handleChangeRent = (value) => {
     let rents = { ...this.state.rents };
 
     rents.from = value.min;
@@ -292,7 +298,7 @@ class Map extends Component {
     this.handleGeoJson();
   };
 
-  handleChangeDeposit = value => {
+  handleChangeDeposit = (value) => {
     let deposits = { ...this.state.deposits };
 
     deposits.from = value.min;
@@ -305,7 +311,7 @@ class Map extends Component {
     this.handleGeoJson();
   };
 
-  handleChangeTour = action => {
+  handleChangeTour = (action) => {
     let features = this.state.places.features;
     let lastIndex = features.length - 1;
     let tourActive = this.state.tourActive;
@@ -340,12 +346,12 @@ class Map extends Component {
 
       let lnglat = {
         lng: feature.geometry.coordinates[0],
-        lat: feature.geometry.coordinates[1]
+        lat: feature.geometry.coordinates[1],
       };
 
       this.mapcraft.flyTo({
         lnglat: lnglat,
-        zoom: 15
+        zoom: 15,
       });
 
       this.openPopup(feature.properties, lnglat);
@@ -355,15 +361,21 @@ class Map extends Component {
   };
 
   InitializeMap = () => {
+    const placesInfo = { 
+      type: "FeatureCollection",
+      features:store.getStore().nftList
+    };
+    console.log(store.getStore().dapp_contract)
+    console.log(placesInfo)
     this.mapcraft = new Mapcraft({
       env: {
         mapbox: {
           token:
-            "pk.eyJ1IjoiYXlkaW5naGFuZSIsImEiOiJjazJpcXB1Zm8xamNvM21sNjlsMG95ejY3In0.jMuteEFuzviEuitJZ-DY2w"
-        }
+            "pk.eyJ1IjoiYXlkaW5naGFuZSIsImEiOiJjazJpcXB1Zm8xamNvM21sNjlsMG95ejY3In0.jMuteEFuzviEuitJZ-DY2w",
+        },
       },
       styles: {
-        light: "mapbox://styles/mapbox/streets-v11"
+        light: "mapbox://styles/mapbox/streets-v11",
       },
       map: {
         container: "app-map",
@@ -371,22 +383,22 @@ class Map extends Component {
         zoom: 5,
         pitch: 50,
         bearing: 0,
-        hash: false
+        hash: false,
       },
       controls: {
         fullscreen: false,
         geolocation: false,
-        navigation: true
+        navigation: true,
       },
       icons: {
         house: "./assets/images/icon-house.png",
         apartment: "./assets/images/icon-apartment.png",
         shared: "./assets/images/icon-shared.png",
-        dorm: "./assets/images/icon-dorm.png"
+        dorm: "./assets/images/icon-dorm.png",
       },
       geoJsons: {
-        places: "./data/places.json"
-      }
+        places: "./data/places.json",
+      },
     });
 
     this.mapcraft.load().then(() => {
@@ -400,7 +412,7 @@ class Map extends Component {
         this.handleChangeSlide(true);
       }, 5000);
 
-      this.mapcraft.map.on("click", "point-symbol-places", event => {
+      this.mapcraft.map.on("click", "point-symbol-places", (event) => {
         let properties = event.features[0].properties;
         let coordinates = event.features[0].geometry.coordinates.slice();
 
@@ -418,19 +430,11 @@ class Map extends Component {
       properties.images = JSON.parse(properties.images);
 
     properties.typeName = this.state.types.filter(
-      t => t.slug === properties.type
+      (t) => t.slug === properties.type
     )[0].name;
 
-    let {
-      title,
-      images,
-      excert,
-      typeName,
-      rooms,
-      area,
-      rent,
-      deposit
-    } = properties;
+    let { title, images, excert, typeName, rooms, area, rent, deposit } =
+      properties;
 
     let html = `<div class="sc-card sc-borderless">
       <div class="sc-card-header">
@@ -479,13 +483,13 @@ class Map extends Component {
 
     this.mapcraft.openPopup({
       lnglat: lnglat,
-      html: html
+      html: html,
     });
 
-    let pageInfo={...properties};
-    pageInfo.coordinates=lnglat;
+    let pageInfo = { ...properties };
+    pageInfo.coordinates = lnglat;
     console.log(document.querySelectorAll(".app-page-trigger"));
-    document.querySelectorAll(".app-page-trigger").forEach(element => {
+    document.querySelectorAll(".app-page-trigger").forEach((element) => {
       element.addEventListener("click", () => {
         this.handleChangePage(true);
 

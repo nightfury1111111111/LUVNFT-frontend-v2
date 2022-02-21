@@ -17,9 +17,15 @@ import {
 } from "@harmony-js/utils";
 import { compareAsc, format } from "date-fns";
 import styled from "styled-components";
+import { extractJSONFromURI } from "../utils/extractJSONFromURI";
 import { Iconly } from "react-iconly";
 
 import * as common from "../utils/common";
+import homePic from "../assets/img/home-m-2022.02.10-21_27_53.png";
+import storePic from "../assets/img/home.png";
+import hotelPic from "../assets/img/luv-hotel.png";
+import landPic from "../assets/img/status.png";
+import stadiumPic from "../assets/img/stadium.png";
 
 import Store from "../stores/store";
 const store = Store.store;
@@ -51,14 +57,22 @@ const NftDetailWrapper = styled.div`
   }
 `;
 
+// const NftPicWrapper = styled.div`
+//   width: 40%;
+//   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+//   background: radial-gradient(
+//     77.96% 81.64% at 50% 50%,
+//     #ffffff 0%,
+//     #ffca0e 100%
+//   );
+//   height: 100%;
+//   ${({ theme }) => theme.mediaQueries.sm} {
+//     width: 100%;
+//     margin-bottom: 10px;
+//   }
+// `;
 const NftPicWrapper = styled.div`
   width: 40%;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  background: radial-gradient(
-    77.96% 81.64% at 50% 50%,
-    #ffffff 0%,
-    #ffca0e 100%
-  );
   height: 100%;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
@@ -83,24 +97,71 @@ const BidLogWrapper = styled.div`
 
 const Divider = styled.span`
   border: 1px solid #000000;
-  width:2px;
-  ${({ theme }) => theme.mediaQueries.sm}{
-    width:0;
-    display:none;
+  width: 2px;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 0;
+    display: none;
   }
   height: 80%;
   opacity: 0.2;
 `;
 
 const AuctionWrapper = styled.div`
-  height:26%;
-  padding-top:10px;
+  height: 26%;
+  padding-top: 10px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  ${({ theme }) => theme.mediaQueries.sm}{
-    flex-direction:column;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    flex-direction: column;
+  }
+`;
 
+const NFTCardWrapper = styled.div`
+  width: 370px;
+  height: 370px;
+  color: white;
+  background-image: url(${(props) => {
+      switch (props.type) {
+        case "apartment":
+          return homePic;
+        case "land":
+          return landPic;
+        default:
+          return;
+      }
+    }}),
+    url(${(props) => props.bgPath});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 50%, 100% 100%;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 350px;
+    height: 350px;
+  }
+`;
+
+const AnimatedDiv = styled.div`
+  width: 100%;
+  text-align: center;
+  font-size: 16px;
+  color: red;
+  animation-name: exam;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+  @keyframes exam {
+    0% {
+      color: red;
+      // background-color: red;
+    }
+    50% {
+      color: green;
+      // background-color: blue;
+    }
+    100% {
+      color: red;
+      // background-color: red;
+    }
   }
 `;
 
@@ -142,22 +203,36 @@ export default function NftDetail() {
     // price = window.web3.utils.fromWei(price);
     //For ONE
     price = fromWei(price, Units.one);
+    const svg_image = await contract.methods
+      .getSVG(
+        id,
+        JSON.parse(nft.nft_info).geometry.coordinates[0],
+        JSON.parse(nft.nft_info).geometry.coordinates[1],
+        JSON.parse(nft.nft_info).properties.title
+      )
+      .call();
+    console.log("svgimage", extractJSONFromURI(svg_image).image);
 
     const isNftOwned = owner == store.getStore().account ? true : false;
     const mintFreshNft =
       owner == "0xfEd7ADe2bf5D99934e0F5a991F1Ea3D89a444885" ? true : false;
     let auctionObj = await contract.methods.getAuctionInfo(id).call();
     let locn_nft = {
-      token_id: id,
-      name: nft.location_name,
+      tokenId: id,
+      name: JSON.parse(nft.nft_info).properties.title,
       owner: owner,
+      svg_image: extractJSONFromURI(svg_image).image,
       owner_fmt: owner_fmt,
-      svg_image: nft.svg_image,
+      type: JSON.parse(nft.nft_info).properties.type,
       price: price,
+      description:JSON.parse(nft.nft_info).properties.description,
       isNftOwned: isNftOwned,
       mintFreshNft: mintFreshNft,
       mintFreshNft: true,
+      excert:JSON.parse(nft.nft_info).properties.excert,
       hasAuctionStarted: auctionObj.isExist,
+      longitude: JSON.parse(nft.nft_info).geometry.coordinates[0],
+      latitude: JSON.parse(nft.nft_info).geometry.coordinates[1],
     };
     return locn_nft;
   };
@@ -337,7 +412,7 @@ export default function NftDetail() {
       });
     }
   };
-  console.log(bidTime)
+  console.log(bidTime);
 
   useEffect(() => {
     if (contract == null) return;
@@ -792,9 +867,43 @@ export default function NftDetail() {
               <MainIntroWrapper className="ml-8 mr-8 mt-4 flex flex-row">
                 <NftPicWrapper className="flex justify-center items-center cursor-pointer rounded-lg">
                   {nftObj && (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: nftObj.svg_image }}
-                    ></div>
+                    <NFTCardWrapper
+                      bgPath={nftObj.svg_image}
+                      type={nftObj.type}
+                    >
+                      <div
+                        style={{
+                          marginTop: "10%",
+                          fontSize: "20px",
+                          fontWeight: "bold",
+                          textAlign: "center",
+                          width: "100%",
+                          color: "white",
+                        }}
+                      >
+                        {nftObj.name}
+                      </div>
+                      {nftObj.isNftOwned && (
+                        <AnimatedDiv>Owned by you.</AnimatedDiv>
+                      )}
+                      {nftObj.isNftOwned ? (
+                        <div style={{ marginLeft: "10%", marginTop: "42%" }}>
+                          lat: {Number(nftObj.latitude).toFixed(4)} N, long:
+                          {Number(nftObj.longitude).toFixed(4)} E
+                        </div>
+                      ) : (
+                        <div style={{ marginLeft: "10%", marginTop: "50%" }}>
+                          lat: {Number(nftObj.latitude).toFixed(4)} N, long:
+                          {Number(nftObj.longitude).toFixed(4)} E
+                        </div>
+                      )}
+                      <div style={{ marginLeft: "10%" }}>
+                        ID: {nftObj.tokenId}
+                      </div>
+                      <div style={{ marginLeft: "10%" }}>
+                        Price: {nftObj.price} ONE
+                      </div>
+                    </NFTCardWrapper>
                   )}
                 </NftPicWrapper>
                 <NftInfoWrapper className="flex flex-col pl-4">
@@ -889,8 +998,7 @@ export default function NftDetail() {
                           fontSize: "18px",
                         }}
                       >
-                        Live in the historic city of State along the river and
-                        hills with locals around.
+                        {nftObj.excert}
                       </span>
                     </div>
                     <AuctionWrapper>
@@ -1022,18 +1130,10 @@ export default function NftDetail() {
             <NftDetailWrapper className="flex flex-row p-4">
               <DescriptionWrapper className="flex flex-col ml-2 mt-4 pr-12">
                 <span style={styles.entryLabel}>Mint Description:</span>
-                <span style={styles.entryDesc}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Facilisi fermentum volutpat sit phasellus accumsan massa urna.
-                  Augue at diam lacus viverra risus elit libero ridiculus
-                  rutrum. Felis venenatis nunc neque nascetur ornare lacus
-                  dictum enim. Metus, curabitur elementum varius molestie.
-                  Vestibulum elit lobortis consectetur orci faucibus nec eget
-                  ut.
-                </span>
+                <span style={styles.entryDesc}>{nftObj.description}</span>
                 <br />
-                <span style={styles.entryLabel}>Token ID:</span>
-                <span style={styles.entryDesc}>xxxxxx</span>
+                <span style={styles.entryLabel}>Token ID: {nftObj.tokenId} </span>
+                {/* <span style={styles.entryDesc}>{nftObj.tokenId}</span> */}
               </DescriptionWrapper>
               <span
                 style={{
