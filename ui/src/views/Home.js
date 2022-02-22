@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player/youtube";
 import styled from "styled-components";
+import Store from "../stores/store";
 
 import {
   Link,
@@ -9,6 +10,7 @@ import {
   useParams,
   useRouteMatch,
 } from "react-router-dom";
+
 
 import country_icon_svg from "../assets/img/country.svg";
 import city_icon_svg from "../assets/img/city.svg";
@@ -19,6 +21,10 @@ import stadiumPic from "../assets/img/stadium.png";
 import statusPic from "../assets/img/status.png";
 import hotelPic from "../assets/img/luv-hotel.png";
 import backgroundVideo from "../assets/LUVNFTEstate.mp4";
+
+const store = Store.store;
+const emitter = Store.emitter;
+const dispatcher = Store.dispatcher;
 
 const BannerWrapper = styled.div`
   width: 100%;
@@ -142,8 +148,8 @@ export default function Home() {
       {/* <BannerWrapper> */}
       <VideoWrapper>
         <video
-          class="DG_video__2_qUl"
-          id="my-video"
+          // class="DG_video__2_qUl"
+          // id="my-video"
           style={{
             backgroundSize: "cover",
             backgroundPosition: "50% 50%",
@@ -177,7 +183,16 @@ export default function Home() {
       {/* </BannerWrapper> */}
       <div className="flex flex-col" style={{ marginTop: "15px" }}>
         <div className="flex flex-col justify-start mb-2">
-          <ExploreWrapper to={`/market`} className="rounded p-1 mb-2">
+          <ExploreWrapper
+            to={`/market`}
+            className="rounded p-1 mb-2"
+            onClick={() =>
+              dispatcher.dispatch({
+                type: "SET_CATEGORY",
+                content: null,
+              })
+            }
+          >
             <span className="text-4xl">🗺</span>
           </ExploreWrapper>
         </div>
@@ -188,8 +203,19 @@ export default function Home() {
           </div>
 
           <CardBoxWrapper className="px-8 flex flex-row w-100 justify-center space-x-8">
-            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
-              <BackgroundWrapper className="m-2 mb-0">
+            <CardLinkWrapper
+              to={`/market`}
+              className="rounded-lg flex flex-col cursor-pointer"
+            >
+              <BackgroundWrapper
+                className="m-2 mb-0"
+                onClick={() =>
+                  dispatcher.dispatch({
+                    type: "SET_CATEGORY",
+                    content: 2,
+                  })
+                }
+              >
                 <img src={salePic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
@@ -197,9 +223,20 @@ export default function Home() {
                   🏬 NFT STORE
                 </NftNameWrapper>
               </div>
-            </CardDivWrapper>
-            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
-              <BackgroundWrapper className="m-2 mb-0">
+            </CardLinkWrapper>
+            <CardLinkWrapper
+              to={`/market`}
+              className="rounded-lg flex flex-col cursor-pointer"
+            >
+              <BackgroundWrapper
+                className="m-2 mb-0"
+                onClick={() =>
+                  dispatcher.dispatch({
+                    type: "SET_CATEGORY",
+                    content: 0,
+                  })
+                }
+              >
                 <img src={homePic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
@@ -207,12 +244,21 @@ export default function Home() {
                   🏠 NFT HOME
                 </NftNameWrapper>
               </div>
-            </CardDivWrapper>
+            </CardLinkWrapper>
             <CardLinkWrapper
               to={`/market`}
               className="rounded-lg flex flex-col cursor-pointer"
             >
-              <BackgroundWrapper className="m-2 mb-0">
+              {/* content 1 means hotel  */}
+              <BackgroundWrapper
+                className="m-2 mb-0"
+                onClick={() =>
+                  dispatcher.dispatch({
+                    type: "SET_CATEGORY",
+                    content: 1,
+                  })
+                }
+              >
                 <img src={hotelPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
@@ -221,10 +267,19 @@ export default function Home() {
                 </NftNameWrapper>
               </div>
             </CardLinkWrapper>
-            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
+            <CardLinkWrapper
+              to={`/market`}
+              className="rounded-lg flex flex-col cursor-pointer"
+            >
               <BackgroundWrapper
                 // bgPath={landmark_icon_svg}
                 className="m-2 mb-0"
+                onClick={() =>
+                  dispatcher.dispatch({
+                    type: "SET_CATEGORY",
+                    content: 4,
+                  })
+                }
               >
                 <img src={statusPic} />
               </BackgroundWrapper>
@@ -233,9 +288,20 @@ export default function Home() {
                   🗽 NFT LANDMARK
                 </NftNameWrapper>
               </div>
-            </CardDivWrapper>
-            <CardDivWrapper className="rounded-lg flex flex-col cursor-pointer">
-              <BackgroundWrapper className="m-2 mb-0">
+            </CardLinkWrapper>
+            <CardLinkWrapper
+              to={`/market`}
+              className="rounded-lg flex flex-col cursor-pointer"
+            >
+              <BackgroundWrapper
+                className="m-2 mb-0"
+                onClick={() =>
+                  dispatcher.dispatch({
+                    type: "SET_CATEGORY",
+                    content: 3,
+                  })
+                }
+              >
                 <img src={stadiumPic} />
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
@@ -243,7 +309,7 @@ export default function Home() {
                   🏟 NFT STADIUM
                 </NftNameWrapper>
               </div>
-            </CardDivWrapper>
+            </CardLinkWrapper>
           </CardBoxWrapper>
         </div>
       </div>

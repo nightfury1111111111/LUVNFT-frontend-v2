@@ -12,21 +12,28 @@ import {
 } from "@harmony-js/utils";
 import { BN } from "@harmony-js/crypto";
 import { Iconly } from "react-iconly";
-import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Modal,
+  Box,
+  Typography,
+} from "@material-ui/core";
 
 import { useHistory } from "react-router-dom";
-import homePic from "../assets/img/home-m-2022.02.10-21_27_53.png"
-import storePic from "../assets/img/home.png"
-import hotelPic from "../assets/img/luv-hotel.png"
-import landPic from "../assets/img/status.png"
-import stadiumPic from "../assets/img/stadium.png"
+import homePic from "../assets/img/home-m-2022.02.10-21_27_53.png";
+import storePic from "../assets/img/home.png";
+import hotelPic from "../assets/img/luv-hotel.png";
+import landPic from "../assets/img/status.png";
+import stadiumPic from "../assets/img/stadium.png";
 
 import Store from "../stores/store";
 import styled from "styled-components";
 const store = Store.store;
 const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
-
 
 const MarketplaceWrapper = styled.div`
   height: 90vh;
@@ -231,10 +238,34 @@ const AnimatedDiv = styled.div`
   }
 `;
 
+const Modalwrapper = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  background-color: black;
+  border-radius: 10px 10px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 14px;
+  font-family: "Archivo Black";
+  font-weight: bold;
+  ${({ theme }) => theme.mediaQueries.sm} {
+    width: 320px;
+  }
+`;
+
 export default function Marketplace() {
   const route_history = useHistory();
+  // const nftType = ["home", "hotel", "store", "stadium", "landmark"];
+  const nftType = ["apartment", "hotel", "store", "stadium", "land"];
   const [nftCount, setNftCount] = useState(0);
   const [nftList, setNftList] = useState([]);
+  const [nftShowList, setNftShowList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState([
     "🏠 Home",
@@ -256,8 +287,14 @@ export default function Marketplace() {
   const [filterArray, setFilterArray] = useState([]);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [priceOpen, setPriceOpen] = useState(false);
+  const [minVal, setMinVal]=useState(0);
+  const [maxVal, setMaxVal]=useState(0);
   const [onesaleOpen, setOnesaleOpen] = useState(false);
-  const [sortbyOpen, setSortbyOpen]=useState(false);
+  const [sortbyOpen, setSortbyOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   //filter select
   const filterMobileChange = (event) => {
@@ -265,41 +302,56 @@ export default function Marketplace() {
   };
 
   const removeFilter = (filter) => {
+    if (values.indexOf(filter) < 5) {
+      dispatcher.dispatch({ type: "SET_CATEGORY", content: null });
+    } else if (values.indexOf(filter) < 6) {
+      console.log("add code here");
+    } else if (values.indexOf(filter) < 10) {
+      dispatcher.dispatch({ type: "SET_STATUS", content: null });
+    } else {
+      dispatcher.dispatch({ type: "SET_SORT", content: null });
+    }
     filterArray.splice(filterArray.indexOf(filter), 1);
     setFilterArray([...filterArray]);
+    refreshPage();
   };
 
-  console.log(filterArray)
-
-  const addFilter=(filter)=>{
+  const addFilter = (filter) => {
     setSelected(values[filter]);
     if (filter < 5) {
+      dispatcher.dispatch({ type: "SET_CATEGORY", content: filter });
       for (let i = 0; i < 5; i++) {
         if (filterArray.indexOf(values[i]) > -1) {
-          filterArray[filterArray.indexOf(values[i])] =
-            values[filter];
+          filterArray[filterArray.indexOf(values[i])] = values[filter];
           setFilterArray([...filterArray]);
+          refreshPage();
           return;
         }
       }
     } else if (filter == 5) {
-      if (filterArray.indexOf(values[5]) > -1) {
-        return;
-      }
-    } else if(filter<10){
+      // dispatcher.dispatch({ type: "SET_PRICE", content: { filter } });
+      handleOpenModal();
+      // if (filterArray.indexOf(values[5]) > -1) {
+      //   refreshPage();
+      //   return;
+      // }
+    } else if (filter < 10) {
+      dispatcher.dispatch({ type: "SET_STATUS", content: filter });
       for (let j = 6; j < 10; j++) {
         if (filterArray.indexOf(values[j]) > -1) {
-          filterArray[filterArray.indexOf(values[j])] =
-            values[filter];
+          filterArray[filterArray.indexOf(values[j])] = values[filter];
           setFilterArray([...filterArray]);
+          refreshPage();
           return;
         }
       }
     } else {
+      dispatcher.dispatch({ type: "SET_SORT", content: filter });
       for (let k = 10; k < 14; k++) {
         if (filterArray.indexOf(values[k]) > -1) {
           filterArray[filterArray.indexOf(values[k])] = values[filter];
           setFilterArray([...filterArray]);
+          refreshPage();
           return;
         }
       }
@@ -310,7 +362,81 @@ export default function Marketplace() {
     setPriceOpen(false);
     setOnesaleOpen(false);
     setSortbyOpen(false);
-  }
+    refreshPage();
+  };
+
+  const refreshPage = async () => {
+    console.log("Refresh Start");
+    let categoryFilter = await store.getStore().category;
+    let statusFilter = await store.getStore().status;
+    let sortFilter = await store.getStore().sort;
+    // console.log("categoryFilter", categoryFilter);
+    // console.log("statusFilter", statusFilter);
+    // console.log("sortFilter", sortFilter);
+
+    let categoryTmpList = [];
+    let statusTmpList = [];
+
+    if (categoryFilter != null) {
+      nftList.map((nft) => {
+        if (nft.type == nftType[categoryFilter]) categoryTmpList.push(nft);
+      });
+    } else {
+      categoryTmpList.push(...nftList);
+    }
+    if (statusFilter == 6) {
+      categoryTmpList.map((nft) => {
+        if (nft.price > 0 && nft.auctionEndTime == 99999999999) {
+          statusTmpList.push(nft);
+        }
+      });
+    } else if (statusFilter == 7) {
+      categoryTmpList.map((nft) => {
+        if (nft.auctionEndTime < Date.now() / 1000) {
+          statusTmpList.push(nft);
+        }
+      });
+    } else if (statusFilter == 8) {
+      categoryTmpList.map((nft) => {
+        if (
+          nft.price > 0 &&
+          nft.auctionEndTime > Date.now() / 1000 &&
+          nft.auctionEndTime != 99999999999
+        ) {
+          statusTmpList.push(nft);
+        }
+      });
+    } else if (statusFilter == 9) {
+      categoryTmpList.map((nft) => {
+        if (nft.price == 0) {
+          statusTmpList.push(nft);
+        }
+      });
+    } else {
+      statusTmpList.push(...categoryTmpList);
+    }
+
+    if (sortFilter == 10) {
+      statusTmpList.sort((a, b) => {
+        return b.tokenId - a.tokenId;
+      });
+    }
+    if (sortFilter == 11) {
+      statusTmpList.sort((a, b) => {
+        return a.price - b.price;
+      });
+    } else if (sortFilter == 12) {
+      statusTmpList.sort((a, b) => {
+        return b.price - a.price;
+      });
+    } else if (sortFilter == 13) {
+      statusTmpList.sort((a, b) => {
+        return a.auctionEndTime - b.auctionEndTime;
+      });
+    }
+
+    setNftShowList(statusTmpList);
+  };
 
   useEffect(() => {
     // console.log(nftList);
@@ -336,10 +462,11 @@ export default function Marketplace() {
   };
 
   const downloadNfts = async () => {
+    console.log("Download Start");
     let contract = store.getStore().dapp_contract;
     if (contract) {
       let nftCount = await contract.methods.nextId().call();
-      setNftCount(nftCount);
+      await setNftCount(nftCount);
       let tmpList = [];
       //test_nft
       //   let testNftObj = {
@@ -355,12 +482,10 @@ export default function Marketplace() {
       for (var i = 0; i < nftCount; i++) {
         // const nft = await contract.methods.getTokenDetails(i).call();
         const nft = await contract.methods.getTokenDetails(i).call();
-        console.log(JSON.parse(nft.nft_info));
         const owner = await contract.methods.getOwnerOf(i).call();
         let price = await contract.methods.getPriceOf(i).call();
         //For ETH
         // price = window.web3.utils.fromWei(price);
-        console.log("owner", owner);
         price = fromWei(price, Units.one);
         const isNftOwned = owner == store.getStore().account ? true : false;
         const svg_image = await contract.methods
@@ -371,21 +496,24 @@ export default function Marketplace() {
             JSON.parse(nft.nft_info).properties.title
           )
           .call();
+        let auction = await contract.methods.getAuctionInfo(i).call();
         let nftObj = {
           tokenId: i,
           name: JSON.parse(nft.nft_info).properties.title,
           svg_image: extractJSONFromURI(svg_image).image,
-          type:JSON.parse(nft.nft_info).properties.type,
+          type: JSON.parse(nft.nft_info).properties.type,
           price: price,
           owner: owner,
           isNftOwned: isNftOwned,
+          auctionEndTime:
+            auction.auctionEndTime > 0 ? auction.auctionEndTime : 99999999999, //for sort by auction
           longitude: JSON.parse(nft.nft_info).geometry.coordinates[0],
           latitude: JSON.parse(nft.nft_info).geometry.coordinates[1],
         };
-        console.log("nft", nftObj)
         tmpList.push(nftObj);
       }
-      setNftList(tmpList);
+      console.log("nftList_down", tmpList);
+      await setNftList(tmpList);
     }
   };
 
@@ -397,11 +525,11 @@ export default function Marketplace() {
       return;
     }
     const storeUpdated = async () => {
-      downloadNfts();
+      await downloadNfts();
       //   downloadData();
     };
     emitter.on("StoreUpdated", storeUpdated);
-    downloadNfts();
+    await downloadNfts();
     // downloadData();
   };
 
@@ -409,10 +537,9 @@ export default function Marketplace() {
     init();
   }, []);
 
-  //74.1234324=>74
-  const compress=(data)=>{
-    console.log(Math.floor(data))
-  }
+  useEffect(() => {
+    refreshPage();
+  }, [nftList]);
 
   const svgStr = `<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
   <g id="Layer_1">
@@ -474,6 +601,36 @@ export default function Marketplace() {
 
   return (
     <MarketplaceWrapper className="flex flex-row">
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Modalwrapper>
+          <div>
+            <div>From : </div>
+            <input
+              type="number"
+              value={minVal}
+              onChange={(e) => {
+                setMinVal(e.target.value);
+              }}
+            />
+          </div>
+          <br />
+          <div>
+            <div>To : </div>
+            <input
+              type="number"
+              value={maxVal}
+              onChange={(e) => {
+                setMaxVal(e.target.value);
+              }}
+            />
+          </div>
+        </Modalwrapper>
+      </Modal>
       <SidebarWrapper className="sidebar">
         <div className="sidebar-header flex py-4 px-2">
           <FilterWrapper className="self-start">Filter</FilterWrapper>
@@ -715,7 +872,7 @@ export default function Marketplace() {
             {loading && <span>Loading ...</span>}
             {!loading && (
               <NftContentWrapper className="grid grid-cols-3 gap-4">
-                {nftList.map((nft, idx) => {
+                {nftShowList.map((nft, idx) => {
                   return (
                     <NFTCardWrapper
                       bgPath={nft.svg_image}

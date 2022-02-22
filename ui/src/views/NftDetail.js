@@ -196,7 +196,6 @@ export default function NftDetail() {
   const getNftByTokenId = async (id) => {
     const nft = await contract.methods.getTokenDetails(id).call();
     const owner = await contract.methods.getOwnerOf(id).call();
-    console.log("owner ", owner);
     let owner_fmt = getCompressed(owner);
     let price = await contract.methods.getPriceOf(id).call();
     //For ETH
@@ -211,7 +210,6 @@ export default function NftDetail() {
         JSON.parse(nft.nft_info).properties.title
       )
       .call();
-    console.log("svgimage", extractJSONFromURI(svg_image).image);
 
     const isNftOwned = owner == store.getStore().account ? true : false;
     const mintFreshNft =
@@ -241,7 +239,7 @@ export default function NftDetail() {
     let nftObj = await getNftByTokenId(id);
     setNftObj(nftObj);
     if (nftObj.hasAuctionStarted) {
-      refreshAuctionPanel(nftObj.token_id);
+      refreshAuctionPanel(nftObj.tokenId);
     }
   };
 
@@ -333,7 +331,7 @@ export default function NftDetail() {
       auctionData.highestBidder == store.getStore().account ? true : false;
 
     let auctionObj = {
-      token_id: auctionData.tokenId,
+      tokenId: auctionData.tokenId,
       isExist: auctionData.isExist,
       auctionEndTime: auctionData.auctionEndTime,
       auctionEnded: auctionData.auctionEnded,
@@ -412,7 +410,6 @@ export default function NftDetail() {
       });
     }
   };
-  console.log(bidTime);
 
   useEffect(() => {
     if (contract == null) return;
@@ -450,7 +447,7 @@ export default function NftDetail() {
     setLoading(true);
     if (contract) {
       contract.methods
-        .buy(nftObj.token_id)
+        .buy(nftObj.tokenId)
         .send({ from: store.getStore().account, value: buyAmount })
         .on("transactionHash", (hash) => {
           contract.events.NftBought({}, async (error, event) => {
@@ -470,7 +467,7 @@ export default function NftDetail() {
     let timer = secondsToTime(100);
     let auctionEndTime = Date.now() / 1000 + bidTime;
     let auctionObj = {
-      token_id: 0,
+      tokenId: 0,
       isExist: true,
       auctionEndTime: auctionEndTime,
       origBiddingTime: bidTime,
@@ -487,12 +484,12 @@ export default function NftDetail() {
     setLoading(true);
     if (contract) {
       const result = await contract.methods
-        .startAuction(nftObj.token_id, bidTime)
+        .startAuction(nftObj.tokenId, bidTime)
         .send({
           from: store.getStore().account,
           value: 0,
-          gasPrice: 1000000000,
-          gasLimit: 210000,
+          // gasPrice: 1000000000,
+          // gasLimit: 210000,
         })
         .on("error", (error) => {
           window.alert("Error ", error);
@@ -510,7 +507,7 @@ export default function NftDetail() {
     setLoading(true);
     if (contract) {
       contract.methods
-        .endAuction(nftObj.token_id)
+        .endAuction(nftObj.tokenId)
         .send({ from: store.getStore().account, value: 0 })
         .on("transactionHash", (hash) => {
           contract.events.AuctionEnded({}, async (error, event) => {
@@ -534,7 +531,7 @@ export default function NftDetail() {
       let bidAmount = toWei(bidPrice.toString(), Units.one);
       console.log("bidAmount ", bidAmount);
       contract.methods
-        .placeBid(nftObj.token_id)
+        .placeBid(nftObj.tokenId)
         .send({ from: store.getStore().account, value: bidAmount })
         .on("transactionHash", (hash) => {
           console.log("placing bid ", hash);
@@ -553,7 +550,7 @@ export default function NftDetail() {
       //   let bidAmount = window.web3.utils.toWei(bidPrice.toString(), "Ether");
       //   console.log("bidAmount ", bidAmount);
       //   contract.methods
-      //     .placeBid(nftObj.token_id)
+      //     .placeBid(nftObj.tokenId)
       //     .send({ from: store.getStore().account, value: bidAmount })
       //     .on("transactionHash", (hash) => {
       //       console.log("placing bid ", hash);
@@ -571,7 +568,7 @@ export default function NftDetail() {
     setLoading(true);
     if (contract) {
       contract.methods
-        .withdrawBid(nftObj.token_id)
+        .withdrawBid(nftObj.tokenId)
         .send({ from: store.getStore().account, value: 0 })
         .on("transactionHash", (hash) => {
           console.log("withdrawing bid ", hash);
@@ -1087,7 +1084,7 @@ export default function NftDetail() {
                                 borderRadius: "10px 0px 0px 10px",
                                 fontSize: "20px",
                                 opacity: "0.4",
-                                ":focus-visible": {
+                                focusVisible: {
                                   border: "0px solid #000000",
                                 },
                               }}

@@ -30,11 +30,11 @@ class Store {
   constructor() {
     this.store = {
       account: null,
-      category: [],
+      category: null,
       priceLow: 0,
-      priceHigh:99999999,
-      status: [],
-      sort: [],
+      priceHigh: 99999999,
+      status: null,
+      sort: null,
     };
 
     dispatcher.register(
@@ -131,8 +131,6 @@ class Store {
       console.error("Metamask not found");
       return;
     }
-    console.log("metamask found");
-    console.log("provider", provider);
 
     try {
       await window.ethereum.request({
@@ -230,7 +228,6 @@ class Store {
     // this.sendTestTransaction(web3);
     // const contractAddress = LuvNFT.networks["2"].address;
     const contractAddress = LuvNFT.networks["1666700000"].address;
-    console.log("LuvNFT contract", contractAddress);
     const abi = LuvNFT.abi;
     const dapp_contract = new web3.eth.Contract(abi, contractAddress);
     store.setStore({ dapp_contract: dapp_contract });
@@ -268,18 +265,18 @@ class Store {
   };
 
   setCategory = async (payload) => {
-    store.setStore({ category: payload });
+    store.setStore({ category: payload.content });
   };
   setPrice = async (payload) => {
-    if(payload.length!=2) return
-    store.setStore({ priceLow: payload[0] });
-    store.setStore({ priceHigh: payload[1] });
+    if(payload.content.length!=2) return
+    store.setStore({ priceLow: payload.content[0] });
+    store.setStore({ priceHigh: payload.content[1] });
   };
   setStatus = async (payload) => {
-    store.setStore({ status: payload });
+    store.setStore({ status: payload.content });
   };
   setSort = async (payload) => {
-    store.setStore({ sort: payload });
+    store.setStore({ sort: payload.content });
   };
 
   getStore() {
