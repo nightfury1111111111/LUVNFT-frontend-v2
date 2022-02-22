@@ -857,7 +857,7 @@ export default function NftDetail() {
           />
         </Link>
       </div>
-      <div className="ml-8" style={{ height: "97%" }}>
+      <div className="ml-8" style={{ height: "97%", fontFamily:"Poppins" }}>
         {nftObj && (
           <>
             <div className="">
@@ -872,6 +872,7 @@ export default function NftDetail() {
                         style={{
                           marginTop: "10%",
                           fontSize: "20px",
+                          fontFamily:"Archivo Black",
                           fontWeight: "bold",
                           textAlign: "center",
                           width: "100%",
@@ -914,6 +915,7 @@ export default function NftDetail() {
                           className="uppercase"
                           style={{
                             color: "#DC1FFF",
+                            fontFamily:"Archivo Black",
                             fontWeight: 600,
                             fontSize: "30px",
                           }}

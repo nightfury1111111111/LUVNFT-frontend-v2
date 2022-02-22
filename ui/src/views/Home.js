@@ -133,7 +133,7 @@ const BackgroundWrapper = styled.div`
 
 const NftNameWrapper = styled.span`
   color: #000000;
-  font-family: Montserrat;
+  font-family: "Poppins";
   font-weight: 900;
   font-style: normal;
   line-height: 96%;
@@ -175,10 +175,10 @@ export default function Home() {
           {/* <source src="https://res.cloudinary.com/dnzambf4m/video/upload/v1641930582/ICE_Landing_Page_rusy2d.webm" /> */}
           <source src="LUVNFTEstate.webm" type="video/mp4" />
         </video>
-        <TitleWrapper>
+        {/* <TitleWrapper>
           <div>OWN A PART OF</div>
           <div>THE METAVERSE</div>
-        </TitleWrapper>
+        </TitleWrapper> */}
       </VideoWrapper>
       {/* </BannerWrapper> */}
       <div className="flex flex-col" style={{ marginTop: "15px" }}>
@@ -199,7 +199,12 @@ export default function Home() {
         <hr />
         <div className="flex flex-col mb-10">
           <div className="px-8 mt-4 flex justify-center mb-4">
-            <span className="text-4xl font-semibold">👀 BY</span>
+            <span
+              className="text-4xl font-semibold"
+              style={{ fontFamily: "Archivo Black" }}
+            >
+              👀 BY
+            </span>
           </div>
 
           <CardBoxWrapper className="px-8 flex flex-row w-100 justify-center space-x-8">
@@ -220,7 +225,7 @@ export default function Home() {
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
                 <NftNameWrapper className="text-xl self-center">
-                  🏬 NFT STORE
+                  💙 NFT STORE
                 </NftNameWrapper>
               </div>
             </CardLinkWrapper>
@@ -241,7 +246,7 @@ export default function Home() {
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
                 <NftNameWrapper className="text-xl self-center">
-                  🏠 NFT HOME
+                  💙 NFT HOME
                 </NftNameWrapper>
               </div>
             </CardLinkWrapper>
@@ -263,7 +268,7 @@ export default function Home() {
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
                 <NftNameWrapper className="text-xl self-center">
-                  🏩 NFT HOTEL
+                  💙 NFT HOTEL
                 </NftNameWrapper>
               </div>
             </CardLinkWrapper>
@@ -285,7 +290,7 @@ export default function Home() {
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
                 <NftNameWrapper className="text-xl self-center">
-                  🗽 NFT LANDMARK
+                  💙 NFT LANDMARK
                 </NftNameWrapper>
               </div>
             </CardLinkWrapper>
@@ -306,7 +311,7 @@ export default function Home() {
               </BackgroundWrapper>
               <div className="flex justify-center" style={{ height: "20%" }}>
                 <NftNameWrapper className="text-xl self-center">
-                  🏟 NFT STADIUM
+                  💙 NFT STADIUM
                 </NftNameWrapper>
               </div>
             </CardLinkWrapper>

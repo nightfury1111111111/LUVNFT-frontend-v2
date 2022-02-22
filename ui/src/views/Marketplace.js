@@ -197,6 +197,8 @@ const NFTCardWrapper = styled.div`
   width: 350px;
   height: 350px;
   color: white;
+  text-align:center;
+  font-family:"Poppins";
   background-image: url(${(props) => {
       switch (props.type) {
         case "apartment":
@@ -287,8 +289,8 @@ export default function Marketplace() {
   const [filterArray, setFilterArray] = useState([]);
   const [categoryOpen, setCategoryOpen] = useState(false);
   const [priceOpen, setPriceOpen] = useState(false);
-  const [minVal, setMinVal]=useState(0);
-  const [maxVal, setMaxVal]=useState(0);
+  const [minVal, setMinVal] = useState(0);
+  const [maxVal, setMaxVal] = useState(0);
   const [onesaleOpen, setOnesaleOpen] = useState(false);
   const [sortbyOpen, setSortbyOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -329,12 +331,15 @@ export default function Marketplace() {
         }
       }
     } else if (filter == 5) {
-      // dispatcher.dispatch({ type: "SET_PRICE", content: { filter } });
+
+      // dispatcher.dispatch({ type: "SET_PRICE", content: filter });
       handleOpenModal();
+      // if(store.getStore().price>0)
       // if (filterArray.indexOf(values[5]) > -1) {
       //   refreshPage();
       //   return;
       // }
+      return
     } else if (filter < 10) {
       dispatcher.dispatch({ type: "SET_STATUS", content: filter });
       for (let j = 6; j < 10; j++) {
@@ -370,11 +375,18 @@ export default function Marketplace() {
     let categoryFilter = await store.getStore().category;
     let statusFilter = await store.getStore().status;
     let sortFilter = await store.getStore().sort;
+    let {priceLow, priceHigh}=store.getStore();
     // console.log("categoryFilter", categoryFilter);
     // console.log("statusFilter", statusFilter);
     // console.log("sortFilter", sortFilter);
+    console.log(
+      "min-max",
+      store.getStore().priceLow,
+      store.getStore().priceHigh
+    );
 
     let categoryTmpList = [];
+    let priceTmpList=[];
     let statusTmpList = [];
 
     if (categoryFilter != null) {
@@ -384,37 +396,47 @@ export default function Marketplace() {
     } else {
       categoryTmpList.push(...nftList);
     }
-    if (statusFilter == 6) {
+
+    if (priceHigh != 99999999&&priceLow!=0){
       categoryTmpList.map((nft) => {
-        if (nft.price > 0 && nft.auctionEndTime == 99999999999) {
-          statusTmpList.push(nft);
-        }
+        if (nft.price >= priceLow && nft.price <= priceHigh)
+          priceTmpList.push(nft);
       });
-    } else if (statusFilter == 7) {
-      categoryTmpList.map((nft) => {
-        if (nft.auctionEndTime < Date.now() / 1000) {
-          statusTmpList.push(nft);
-        }
-      });
-    } else if (statusFilter == 8) {
-      categoryTmpList.map((nft) => {
-        if (
-          nft.price > 0 &&
-          nft.auctionEndTime > Date.now() / 1000 &&
-          nft.auctionEndTime != 99999999999
-        ) {
-          statusTmpList.push(nft);
-        }
-      });
-    } else if (statusFilter == 9) {
-      categoryTmpList.map((nft) => {
-        if (nft.price == 0) {
-          statusTmpList.push(nft);
-        }
-      });
-    } else {
-      statusTmpList.push(...categoryTmpList);
-    }
+    } else if (priceHigh == 99999999 && priceLow == 0){
+      priceTmpList.push(...categoryTmpList);
+    } 
+
+      if (statusFilter == 6) {
+        priceTmpList.map((nft) => {
+          if (nft.price > 0 && nft.auctionEndTime == 99999999999) {
+            statusTmpList.push(nft);
+          }
+        });
+      } else if (statusFilter == 7) {
+        priceTmpList.map((nft) => {
+          if (nft.auctionEndTime < Date.now() / 1000) {
+            statusTmpList.push(nft);
+          }
+        });
+      } else if (statusFilter == 8) {
+        priceTmpList.map((nft) => {
+          if (
+            nft.price > 0 &&
+            nft.auctionEndTime > Date.now() / 1000 &&
+            nft.auctionEndTime != 99999999999
+          ) {
+            statusTmpList.push(nft);
+          }
+        });
+      } else if (statusFilter == 9) {
+        priceTmpList.map((nft) => {
+          if (nft.price == 0) {
+            statusTmpList.push(nft);
+          }
+        });
+      } else {
+        statusTmpList.push(...priceTmpList);
+      }
 
     if (sortFilter == 10) {
       statusTmpList.sort((a, b) => {
@@ -434,6 +456,10 @@ export default function Marketplace() {
         return a.auctionEndTime - b.auctionEndTime;
       });
     }
+    console.log("categoryList", categoryTmpList)
+    console.log("categoryList", categoryTmpList)
+    console.log("categoryList", categoryTmpList)
+    console.log("categoryList", categoryTmpList);
 
     setNftShowList(statusTmpList);
   };
@@ -629,6 +655,22 @@ export default function Marketplace() {
               }}
             />
           </div>
+          <button
+            style={{
+              marginTop: "20px",
+              backgroundColor: "white",
+              borderRadius: "3px",
+              width: "80px",
+              height: "30px",
+            }}
+            onClick={()=>{
+              dispatcher.dispatch({ type: "SET_PRICE_RANGE", content: [minVal,maxVal] });
+              handleCloseModal();
+              refreshPage();
+            }}
+          >
+            OK
+          </button>
         </Modalwrapper>
       </Modal>
       <SidebarWrapper className="sidebar">
@@ -884,10 +926,11 @@ export default function Marketplace() {
                         style={{
                           margin: "auto",
                           marginTop: "10%",
+                          fontFamily: "Archivo Black",
                           fontSize: "20px",
                           fontWeight: "bold",
                           textAlign: "center",
-                          width: "94%",
+                          width: "97%",
                           color: "white",
                         }}
                       >
@@ -897,20 +940,18 @@ export default function Marketplace() {
                         <AnimatedDiv>Owned by you.</AnimatedDiv>
                       )}
                       {nft.isNftOwned ? (
-                        <div style={{ marginLeft: "10%", marginTop: "42%" }}>
+                        <div style={{ marginTop: "42%" }}>
                           lat: {Number(nft.latitude).toFixed(4)} N, long:
                           {Number(nft.longitude).toFixed(4)} E
                         </div>
                       ) : (
-                        <div style={{ marginLeft: "10%", marginTop: "50%" }}>
+                        <div style={{ marginTop: "50%" }}>
                           lat: {Number(nft.latitude).toFixed(4)} N, long:
                           {Number(nft.longitude).toFixed(4)} E
                         </div>
                       )}
-                      <div style={{ marginLeft: "10%" }}>ID: {nft.tokenId}</div>
-                      <div style={{ marginLeft: "10%" }}>
-                        Price: {nft.price} ONE
-                      </div>
+                      <div>ID: {nft.tokenId}</div>
+                      <div>💙NFT ESTATE: {nft.type}</div>
                     </NFTCardWrapper>
                     // <NftItemWrapper
                     //   className="w-full flex flex-col items-center justify-center rounded-lg cursor-pointer hover:shadow-md h-full"

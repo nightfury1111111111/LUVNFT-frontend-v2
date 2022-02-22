@@ -31,6 +31,7 @@ class Store {
     this.store = {
       account: null,
       category: null,
+      price:null,
       priceLow: 0,
       priceHigh: 99999999,
       status: null,
@@ -51,6 +52,9 @@ class Store {
             break;
           case "SET_PRICE":
             this.setPrice(payload);
+            break;
+          case "SET_PRICE_RANGE":
+            this.setPriceRange(payload);
             break;
           case "SET_STATUS":
             this.setStatus(payload);
@@ -268,7 +272,11 @@ class Store {
     store.setStore({ category: payload.content });
   };
   setPrice = async (payload) => {
-    if(payload.content.length!=2) return
+    store.setStore({ price: payload.content });
+  };
+
+  setPriceRange = async (payload) => {
+    if (payload.content.length != 2) return;
     store.setStore({ priceLow: payload.content[0] });
     store.setStore({ priceHigh: payload.content[1] });
   };

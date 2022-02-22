@@ -58,7 +58,7 @@ export default function Header() {
       className={"flex items-center justify-between flex-wrap p-2"}
     >
       <div className="ml-8">
-        <img src={logo} alt="logo"/>
+        <img src={logo} alt="logo" />
       </div>
       <NavWrapper className="flex flex-row">
         {accountFmt ? (
@@ -66,20 +66,22 @@ export default function Header() {
         ) : (
           <span className="p-4 font-bold text-white">No account detected!</span>
         )}
-        <Link
-          to={`/`}
-          className="p-2 lg:px-2 md:mx-0 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-          style={{ fontSize: "25px" }}
-        >
-          🏠
-        </Link>
-        <Link
-          to={`/about`}
-          className="p-2 lg:px-2 md:mx-0 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
-          style={{ fontSize: "25px" }}
-        >
-          🤔
-        </Link>
+        <div>
+          <Link
+            to={`/`}
+            className="p-2 lg:px-2 md:mx-0 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
+            style={{ fontSize: "25px" }}
+          >
+            🏠
+          </Link>
+          <Link
+            to={`/about`}
+            className="p-2 lg:px-2 md:mx-0 rounded hover:bg-gray-200 hover:text-gray-700 transition-colors duration-300"
+            style={{ fontSize: "25px" }}
+          >
+            🤔
+          </Link>
+        </div>
       </NavWrapper>
     </HeaderWrapper>
   );
