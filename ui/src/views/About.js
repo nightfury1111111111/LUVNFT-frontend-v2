@@ -71,7 +71,7 @@ export default function About() {
       </div>
       <br></br>
       <b>Email</b>
-      <div className="font-medium">swapp19902@gmail.com</div>
+      <div className="font-medium">info@blkluv.org</div>
     </div>
   );
 }

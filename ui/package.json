@@ -27,6 +27,7 @@
     "flux": "^4.0.1",
     "gulp": "4.0.2",
     "gulp-append-prepend": "1.0.8",
+    "ipfs-http-client": "^49.0.2",
     "mapbox-gl": "^1.5.0",
     "mapcraft": "^0.1.1",
     "react": "^16.10.2",
@@ -44,8 +45,8 @@
     "stylecraft": "^0.1.1",
     "styled-components": "^5.3.3",
     "terraformer": "^1.0.9",
-    "web3": "^1.4.0",
-    "typescript": "^3.9.10"
+    "typescript": "^3.9.10",
+    "web3": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -68,8 +69,7 @@
       "last 1 safari version"
     ]
   },
-  "optionalDependencies": {
-  },
+  "optionalDependencies": {},
   "devDependencies": {
     "autoprefixer": "^10.2.5",
     "postcss": "^8.3.5",
