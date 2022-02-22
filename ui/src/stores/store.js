@@ -30,6 +30,11 @@ class Store {
   constructor() {
     this.store = {
       account: null,
+      category: [],
+      priceLow: 0,
+      priceHigh:99999999,
+      status: [],
+      sort: [],
     };
 
     dispatcher.register(
@@ -40,6 +45,18 @@ class Store {
             break;
           case "GET_NFT_BY_ID":
             this.getNftById(payload);
+            break;
+          case "SET_CATEGORY":
+            this.setCategory(payload);
+            break;
+          case "SET_PRICE":
+            this.setPrice(payload);
+            break;
+          case "SET_STATUS":
+            this.setStatus(payload);
+            break;
+          case "SET_SORT":
+            this.setSort(payload);
             break;
           default: {
           }
@@ -218,13 +235,13 @@ class Store {
     const dapp_contract = new web3.eth.Contract(abi, contractAddress);
     store.setStore({ dapp_contract: dapp_contract });
 
-    let tmpList=[]
-    let nftCount=await dapp_contract.methods.nextId().call();
-    for(let j=0;j<nftCount;j++){
+    let tmpList = [];
+    let nftCount = await dapp_contract.methods.nextId().call();
+    for (let j = 0; j < nftCount; j++) {
       const nft = await dapp_contract.methods.getTokenDetails(j).call();
       tmpList.push(JSON.parse(nft.nft_info));
     }
-    store.setStore({nftList:tmpList});
+    store.setStore({ nftList: tmpList });
   };
 
   configure = async (payload) => {
@@ -248,6 +265,21 @@ class Store {
 
   getNftById = async (payload) => {
     console.log("getNftById ", payload);
+  };
+
+  setCategory = async (payload) => {
+    store.setStore({ category: payload });
+  };
+  setPrice = async (payload) => {
+    if(payload.length!=2) return
+    store.setStore({ priceLow: payload[0] });
+    store.setStore({ priceHigh: payload[1] });
+  };
+  setStatus = async (payload) => {
+    store.setStore({ status: payload });
+  };
+  setSort = async (payload) => {
+    store.setStore({ sort: payload });
   };
 
   getStore() {

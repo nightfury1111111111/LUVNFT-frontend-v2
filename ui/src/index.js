@@ -32,8 +32,8 @@ import Store from "./stores/store";
 import Marketplace from "views/Marketplace";
 import Map from "components/map/app";
 
-// const store = Store.store;
-// const emitter = Store.emitter;
+const store = Store.store;
+const emitter = Store.emitter;
 const dispatcher = Store.dispatcher;
 
 const GlobalStyle = createGlobalStyle`
