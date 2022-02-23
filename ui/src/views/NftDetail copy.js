@@ -44,7 +44,6 @@ const MainIntroWrapper = styled.div`
 `;
 
 const NftInfoWrapper = styled.div`
-color:black;
   width: 60%;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 100%;
@@ -163,23 +162,6 @@ const AnimatedDiv = styled.div`
       color: red;
       // background-color: red;
     }
-  }
-`;
-
-const DetailInfoWrapper = styled.div`
-  display: flex;
-  margin-top: 15px;
-  ${({ theme }) => theme.mediaQueries.sm} {
-    flex-direction: column;
-    margin-top:0;
-  }
-`;
-
-const InfoWrapper = styled.div`
-  width: 50%;
-  ${({ theme }) => theme.mediaQueries.sm}{
-    width:100%;
-    margin-top:15px;
   }
 `;
 
@@ -875,7 +857,7 @@ export default function NftDetail() {
           />
         </Link>
       </div>
-      <div className="ml-8" style={{ height: "97%", fontFamily: "Poppins" }}>
+      <div className="ml-8" style={{ height: "97%", fontFamily:"Poppins" }}>
         {nftObj && (
           <>
             <div className="">
@@ -890,7 +872,7 @@ export default function NftDetail() {
                         style={{
                           marginTop: "10%",
                           fontSize: "20px",
-                          fontFamily: "Archivo Black",
+                          fontFamily:"Archivo Black",
                           fontWeight: "bold",
                           textAlign: "center",
                           width: "100%",
@@ -932,7 +914,8 @@ export default function NftDetail() {
                         <span
                           className="uppercase"
                           style={{
-                            fontFamily: "Archivo Black",
+                            color: "#DC1FFF",
+                            fontFamily:"Archivo Black",
                             fontWeight: 600,
                             fontSize: "30px",
                           }}
@@ -940,72 +923,145 @@ export default function NftDetail() {
                           {nftObj.name}
                         </span>
                       </div>
+                      <div
+                        className="mr-2 flex flex-row"
+                        style={{
+                          fontSize: "22px",
+                          color: "transparent",
+                          textShadow: "0 0 #DC1FFF",
+                        }}
+                      >
+                        <span
+                          style={{
+                            color: "#000000",
+                            fontWeight: 600,
+                            fontSize: "22px",
+                          }}
+                        >
+                          23&nbsp;
+                        </span>
+                        {/* <Iconly
+                          name="Heart2"
+                          set="two-tone"
+                          primaryColor="red"
+                          size="large"
+                        /> */}
+                        💜
+                      </div>
                     </div>
-                    <DetailInfoWrapper>
-                      <InfoWrapper>{nftObj.excert}</InfoWrapper>
-                      <InfoWrapper>
-                        LAT:{nftObj.latitude} N, LONG: {nftObj.longitude} E
-                      </InfoWrapper>
-                    </DetailInfoWrapper>
-                    <DetailInfoWrapper>
-                      <InfoWrapper>💙NFT ESTATE: {nftObj.type}</InfoWrapper>
-                      <InfoWrapper>ID:{nftObj.tokenId}</InfoWrapper>
-                    </DetailInfoWrapper>
-                    <DetailInfoWrapper>
-                      <InfoWrapper>
-                        STtatus:{" "}
-                        {!nftObj.isNftOwned &&
-                          !nftObj.mintFreshNft &&
-                          !nftObj.hasAuctionStarted &&
-                          !auctionObj &&
-                          "Not for sale!"}
-                        {!nftObj.isNftOwned &&
-                          !nftObj.mintFreshNft &&
-                          !nftObj.hasAuctionStarted &&
-                          !auctionObj &&
-                          "Not for sale!"}
-                        {nftObj.hasAuctionStarted &&
-                          auctionObj &&
-                          auctionObj.auctionEnded &&
-                          "Not for sale!"}
-                        {nftObj.isNftOwned &&
-                          !nftObj.hasAuctionStarted &&
-                          "Not for sale!"}
-                      </InfoWrapper>
-                      <InfoWrapper>Owned by: {nftObj.owner}</InfoWrapper>
-                    </DetailInfoWrapper>
-                    <DetailInfoWrapper>
-                      <InfoWrapper>One:{nftObj.price}</InfoWrapper>
-                      <InfoWrapper>USD: {nftObj.price * 2.2}</InfoWrapper>
-                    </DetailInfoWrapper>
-                    <DetailInfoWrapper>
-                      <InfoWrapper>
-                        Auction Ends:
-                        <span style={styles.auctionTimeNumber}>0</span>
-                        <span style={styles.auctionTimeDesc}>d&nbsp;</span>
-                        <span style={styles.auctionTimeNumber}>
-                          {auctionObj && auctionObj.timer && auctionObj.timer.h}
+                    <div
+                      className="flex justify-between mt-2"
+                      style={{ height: "8%", marginBottom: "10px" }}
+                    >
+                      <div className="ml-2">
+                        <span
+                          style={{
+                            color: "#000000",
+                            fontWeight: 600,
+                            fontSize: "20px",
+                          }}
+                        >
+                          Owned by <b>{nftObj.owner_fmt}</b>
                         </span>
-                        <span style={styles.auctionTimeDesc}>h&nbsp;</span>
-                        <span style={styles.auctionTimeNumber}>
-                          {auctionObj && auctionObj.timer && auctionObj.timer.m}
+                      </div>
+                      <div
+                        className="mr-2 flex flex-row"
+                        style={{ fontSize: "22px" }}
+                      >
+                        <span
+                          style={{
+                            color: "#000000",
+                            fontWeight: 600,
+                            fontSize: "22px",
+                          }}
+                        >
+                          50&nbsp;
                         </span>
-                        <span style={styles.auctionTimeDesc}>m&nbsp;</span>
-                        <span style={styles.auctionTimeNumber}>
-                          {auctionObj && auctionObj.timer && auctionObj.timer.s}
-                        </span>
-                        <span style={styles.auctionTimeDesc}>s&nbsp;</span>
-                      </InfoWrapper>
-                      <InfoWrapper>
-                        Highest Bid:{" "}
-                        <span style={styles.auctionTimeNumber}>
-                          {auctionObj &&
-                            auctionObj.highestBid &&
-                            auctionObj.highestBid}
-                          &nbsp;
-                        </span>
-                      </InfoWrapper>
-                    </DetailInfoWrapper>
+                        {/* <Iconly
+                          name="Show"
+                          set="two-tone"
+                          primaryColor="black"
+                          size="large"
+                        /> */}
+                        👁
+                      </div>
+                    </div>
+                    <div
+                      className="flex items-start pt-4 ml-2"
+                      style={{ height: "38%" }}
+                    >
+                      <span
+                        style={{
+                          color: "#000000",
+                          fontWeight: 400,
+                          fontSize: "18px",
+                        }}
+                      >
+                        {nftObj.excert}
+                      </span>
+                    </div>
+                    <AuctionWrapper>
+                      <div
+                        className="flex flex-col ml-4"
+                        style={{ width: "100%" }}
+                      >
+                        <div>
+                          <span style={styles.listEntry}>Current price</span>
+                          <div>
+                            <span
+                              style={{
+                                color: "#00FFA3",
+                                fontWeight: 600,
+                                fontSize: "24px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              {nftObj.price}&nbsp;
+                            </span>
+                            <span
+                              style={{
+                                color: "#000000",
+                                fontWeight: 600,
+                                fontSize: "24px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              $USD&nbsp;
+                            </span>
+                            <span
+                              style={{
+                                color: "#DC1FFF",
+                                fontWeight: 600,
+                                fontSize: "20px",
+                                lineHeight: "24px",
+                              }}
+                            >
+                              ($xxx)
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <Divider />
+                      {nftObj.hasAuctionStarted &&
+                        auctionObj &&
+                        !auctionObj.auctionEnded && (
+                          <>
+                            <AuctionTime />
+                            <Divider />
+                            <HighestBidInfo />
+                          </>
+                        )}
+                      {!nftObj.isNftOwned &&
+                        !nftObj.mintFreshNft &&
+                        !nftObj.hasAuctionStarted &&
+                        !auctionObj && <AuctionNot />}
+                      {nftObj.hasAuctionStarted &&
+                        auctionObj &&
+                        auctionObj.auctionEnded && <AuctionNot />}
+                      {nftObj.isNftOwned && !nftObj.hasAuctionStarted && (
+                        <AuctionNot />
+                      )}
+                    </AuctionWrapper>
                     <div
                       className="flex justify-start items-center"
                       style={{ height: "18%" }}
@@ -1072,12 +1128,10 @@ export default function NftDetail() {
             </div>
             <NftDetailWrapper className="flex flex-row p-4">
               <DescriptionWrapper className="flex flex-col ml-2 mt-4 pr-12">
-                <span style={styles.entryLabel}>STORY</span>
+                <span style={styles.entryLabel}>Mint Description:</span>
                 <span style={styles.entryDesc}>{nftObj.description}</span>
-                {/* <br />
-                <span style={styles.entryLabel}>
-                  Token ID: {nftObj.tokenId}{" "}
-                </span> */}
+                <br />
+                <span style={styles.entryLabel}>Token ID: {nftObj.tokenId} </span>
                 {/* <span style={styles.entryDesc}>{nftObj.tokenId}</span> */}
               </DescriptionWrapper>
               <span
