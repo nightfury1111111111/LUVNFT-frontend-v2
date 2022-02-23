@@ -136,6 +136,7 @@ const NFTCardWrapper = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: 50%, 100% 100%;
+  text-align:center;
   ${({ theme }) => theme.mediaQueries.sm} {
     width: 350px;
     height: 350px;
@@ -203,7 +204,7 @@ export default function NftDetail() {
 
   const getCompressed = (addr) => {
     const len = addr.length;
-    return addr.substring(0, 6) + "..." + addr.substring(len - 5, len);
+    return addr.substring(0, 5) + "..." + addr.substring(len - 3, len);
   };
 
   useEffect(() => {
@@ -233,6 +234,15 @@ export default function NftDetail() {
     const mintFreshNft =
       owner == "0xfEd7ADe2bf5D99934e0F5a991F1Ea3D89a444885" ? true : false;
     let auctionObj = await contract.methods.getAuctionInfo(id).call();
+    let status="For sale!";
+    if (
+      (isNftOwned && mintFreshNft && auctionObj.isExist && !auctionObj) ||
+      (isNftOwned && mintFreshNft && auctionObj.isExist && !auctionObj) ||
+      (auctionObj.isExist && auctionObj && auctionObj.auctionEnded) ||
+      (isNftOwned && auctionObj.isExist)
+    ) {
+      status = "Not for sale!";
+    }
     let locn_nft = {
       tokenId: id,
       name: JSON.parse(nft.nft_info).properties.title,
@@ -245,6 +255,7 @@ export default function NftDetail() {
       isNftOwned: isNftOwned,
       mintFreshNft: mintFreshNft,
       mintFreshNft: true,
+      status,
       excert:JSON.parse(nft.nft_info).properties.excert,
       hasAuctionStarted: auctionObj.isExist,
       longitude: JSON.parse(nft.nft_info).geometry.coordinates[0],
@@ -481,22 +492,6 @@ export default function NftDetail() {
     }
   };
 
-  const testStartAuction = () => {
-    let timer = secondsToTime(100);
-    let auctionEndTime = Date.now() / 1000 + bidTime;
-    let auctionObj = {
-      tokenId: 0,
-      isExist: true,
-      auctionEndTime: auctionEndTime,
-      origBiddingTime: bidTime,
-      currBiddingTime: bidTime,
-      timer: timer,
-    };
-    setAuctionObj(auctionObj);
-    nftObj.hasAuctionStarted = true;
-    setNftObj({ ...nftObj });
-  };
-
   const startAuction = async (nftObj) => {
     console.log("startAuction ", bidTime);
     setLoading(true);
@@ -731,40 +726,6 @@ export default function NftDetail() {
     </ul>
   );
 
-  const AuctionTime = () => (
-    <div className="" style={{ width: "100%" }}>
-      <div className="flex flex-col ml-4" style={{}}>
-        <span
-          style={{
-            color: "#000000",
-            fontWeight: 600,
-            fontSize: "16px",
-          }}
-        >
-          Auction ends in
-        </span>
-        <div>
-          <span style={styles.auctionTimeNumber}>0</span>
-          <span style={styles.auctionTimeDesc}>d&nbsp;</span>
-          <span style={styles.auctionTimeNumber}>{auctionObj.timer.h}</span>
-          <span style={styles.auctionTimeDesc}>h&nbsp;</span>
-          <span style={styles.auctionTimeNumber}>{auctionObj.timer.m}</span>
-          <span style={styles.auctionTimeDesc}>m&nbsp;</span>
-          <span style={styles.auctionTimeNumber}>{auctionObj.timer.s}</span>
-          <span style={styles.auctionTimeDesc}>s&nbsp;</span>
-        </div>
-      </div>
-    </div>
-  );
-  const AuctionNot = () => (
-    <div className="" style={{ width: "100%" }}>
-      <div className="flex flex-col ml-4" style={{}}>
-        <div>
-          <span style={styles.auctionTimeNumber}>Not for sale!</span>
-        </div>
-      </div>
-    </div>
-  );
   const StartAuctionMenu = () => (
     <div className="ml-4" style={{ width: "100%" }}>
       <DropDownBtn />
@@ -903,22 +864,18 @@ export default function NftDetail() {
                         <AnimatedDiv>Owned by you.</AnimatedDiv>
                       )}
                       {nftObj.isNftOwned ? (
-                        <div style={{ marginLeft: "10%", marginTop: "42%" }}>
+                        <div style={{ marginTop: "42%" }}>
                           lat: {Number(nftObj.latitude).toFixed(4)} N, long:
                           {Number(nftObj.longitude).toFixed(4)} E
                         </div>
                       ) : (
-                        <div style={{ marginLeft: "10%", marginTop: "50%" }}>
+                        <div style={{ marginTop: "50%" }}>
                           lat: {Number(nftObj.latitude).toFixed(4)} N, long:
                           {Number(nftObj.longitude).toFixed(4)} E
                         </div>
                       )}
-                      <div style={{ marginLeft: "10%" }}>
-                        ID: {nftObj.tokenId}
-                      </div>
-                      <div style={{ marginLeft: "10%" }}>
-                        Price: {nftObj.price} ONE
-                      </div>
+                      <div>ID: {nftObj.tokenId}</div>
+                      <div>💙NFT ESTATE: {nftObj.type}</div>
                     </NFTCardWrapper>
                   )}
                 </NftPicWrapper>
@@ -942,37 +899,21 @@ export default function NftDetail() {
                       </div>
                     </div>
                     <DetailInfoWrapper>
-                      <InfoWrapper>{nftObj.excert}</InfoWrapper>
+                      <InfoWrapper>🏁{nftObj.excert}</InfoWrapper>
                       <InfoWrapper>
-                        LAT:{nftObj.latitude} N, LONG: {nftObj.longitude} E
+                        LAT:{Number(nftObj.latitude).toFixed(4)} N, LONG:{" "}
+                        {Number(nftObj.longitude).toFixed(4)} E
                       </InfoWrapper>
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
                       <InfoWrapper>💙NFT ESTATE: {nftObj.type}</InfoWrapper>
-                      <InfoWrapper>ID:{nftObj.tokenId}</InfoWrapper>
+                      <InfoWrapper>🆔ID:{nftObj.tokenId}</InfoWrapper>
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
+                      <InfoWrapper>STtatus:{nftObj.status}</InfoWrapper>
                       <InfoWrapper>
-                        STtatus:{" "}
-                        {!nftObj.isNftOwned &&
-                          !nftObj.mintFreshNft &&
-                          !nftObj.hasAuctionStarted &&
-                          !auctionObj &&
-                          "Not for sale!"}
-                        {!nftObj.isNftOwned &&
-                          !nftObj.mintFreshNft &&
-                          !nftObj.hasAuctionStarted &&
-                          !auctionObj &&
-                          "Not for sale!"}
-                        {nftObj.hasAuctionStarted &&
-                          auctionObj &&
-                          auctionObj.auctionEnded &&
-                          "Not for sale!"}
-                        {nftObj.isNftOwned &&
-                          !nftObj.hasAuctionStarted &&
-                          "Not for sale!"}
+                        💰Owned by: {getCompressed(nftObj.owner)}
                       </InfoWrapper>
-                      <InfoWrapper>Owned by: {nftObj.owner}</InfoWrapper>
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
                       <InfoWrapper>One:{nftObj.price}</InfoWrapper>
@@ -980,7 +921,7 @@ export default function NftDetail() {
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
                       <InfoWrapper>
-                        Auction Ends:
+                        ⏰Auction Ends:
                         <span style={styles.auctionTimeNumber}>0</span>
                         <span style={styles.auctionTimeDesc}>d&nbsp;</span>
                         <span style={styles.auctionTimeNumber}>
