@@ -19,6 +19,7 @@
 
 .mapboxgl-popup-content .sc-card-header h5 {
   text-decoration: underline;
+  font-size: 18px;
   margin: 0 !important;
   cursor: pointer;
 }

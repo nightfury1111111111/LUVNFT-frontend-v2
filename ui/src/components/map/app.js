@@ -1,436 +1,545 @@
-import React, { Component } from "react";
-import "./app.css";
-import Mapcraft from "mapcraft";
+import React, { useRef, useEffect, useState } from "react";
+import mapboxgl from "mapbox-gl";
+import { getAppUrl } from "../../utils/getAppUrl";
+
 import Search from "./search";
 import Tour from "./tour";
 import Page from "./page";
-import Store from "../../stores/store";
-const store = Store.store;
-const emitter = Store.emitter;
 
-class Map extends Component {
-  state = {
-    types: [
-      { slug: "house", name: "🗺 LAND", checked: true },
-      { slug: "services", name: "💈 SERVICES", checked: true },
-      { slug: "shared", name: "🏠 ESTATE", checked: true },
-      { slug: "dorm", name: "🏩 SOLTEL", checked: true },
-      { slug: "solfood", name: "🍔 SOLFOOD", checked: true },
-      { slug: "apartment", name: "🏢 APARTMENT", checked: false },
-      { slug: "monument", name: "🗽 MONUMENT", checked: false },
-      { slug: "solmobiles", name: "🚗 SOLMOBILES", checked: false },
-      { slug: "luv", name: "💜 LUV", checked: true },
-      { slug: "stadium", name: "🏟 STADIUM", checked: true },
-      { slug: "share", name: "🚪 NFT SHARE", checked: true },
-      { slug: "store", name: "🏬 STORE", checked: true },
-      { slug: "boat", name: "⛵️ BOAT", checked: true },
-      { slug: "yacht", name: "🛥 YACHT", checked: true },
-    ],
-    rooms: [
-      { slug: "one", name: "One", checked: false },
-      { slug: "two", name: "Two", checked: false },
-      { slug: "more", name: "More", checked: false },
-      { slug: "any", name: "Any", checked: true },
-    ],
-    areas: {
-      from: 30,
-      to: 150,
-    },
-    rents: {
-      from: 5000,
-      to: 20000,
-    },
-    deposits: {
-      from: 10000,
-      to: 100000,
-    },
-    places: {
-      type: "FeatureCollection",
-      features: [],
-    },
-    slideOpen: false,
-    tourActive: false,
-    tourIndex: 0,
-    pageVisible: false,
-    page: {},
-  };
+import "./app.css";
+import "./map.css";
 
-  componentDidMount() {
-    this.InitializeMap();
-  }
+mapboxgl.accessToken =
+  "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4M29iazA2Z2gycXA4N2pmbDZmangifQ.-g_vE53SD2WrJ6tFX7QHmA";
 
-  render() {
-    let numberOFPlaces = this.state.places.features.length;
-    let lastIndex = numberOFPlaces - 1;
+const Map = () => {
+  const mapContainerRef = useRef(null);
+  const baseUrl = getAppUrl();
 
-    return (
-      <div className="map-field">
-        <div id="app-map"></div>
+  const [myGeoJson, setMyGeoJson] = useState([]);
+  const [newGeoJson, setNewGeoJson] = useState([]);
+  const [types, setTypes] = useState([
+    { slug: "house", name: "🗺 LAND", checked: true },
+    { slug: "services", name: "💈 SERVICES", checked: true },
+    { slug: "shared", name: "🏠 ESTATE", checked: true },
+    { slug: "dorm", name: "🏩 SOLTEL", checked: true },
+    { slug: "solfood", name: "🍔 SOLFOOD", checked: true },
+    { slug: "apartment", name: "🏢 APARTMENT", checked: true },
+    { slug: "monument", name: "🗽 MONUMENT", checked: true },
+    { slug: "solmobiles", name: "🚗 SOLMOBILES", checked: true },
+    { slug: "luv", name: "💜 LUV", checked: true },
+    { slug: "stadium", name: "🏟 STADIUM", checked: true },
+    { slug: "share", name: "🚪 NFT SHARE", checked: true },
+    { slug: "store", name: "🏬 STORE", checked: true },
+    { slug: "boat", name: "⛵️ BOAT", checked: true },
+    { slug: "yacht", name: "🛥 YACHT", checked: true },
+  ]);
+  const [rooms, setRooms] = useState([
+    { slug: "one", name: "One", checked: false },
+    { slug: "two", name: "Two", checked: false },
+    { slug: "more", name: "More", checked: false },
+    { slug: "any", name: "Any", checked: true },
+  ]);
+  const [areas, setAreas] = useState({
+    from: 30,
+    to: 150,
+  });
+  const [rents, setRents] = useState({
+    from: 5000,
+    to: 20000,
+  });
+  const [deposits, setDeposits] = useState({
+    from: 10000,
+    to: 100000,
+  });
+  const [places, setPlaces] = useState({
+    type: "FeatureCollection",
+    features: [],
+  });
+  const [slideOpen, setSlideOpen] = useState(true);
+  const [tourActive, setTourActive] = useState(false);
+  const [tourIndex, setTourIndex] = useState(0);
+  const [pageVisible, setPageVisible] = useState(false);
+  const [page, setPage] = useState({});
 
-        <div
-          className={this.getSlideClasses()}
-          style={{ position: "absolute" }}
-        >
-          <Search
-            types={this.state.types}
-            rooms={this.state.rooms}
-            areas={this.state.areas}
-            rents={this.state.rents}
-            deposits={this.state.deposits}
-            slideOpen={this.state.slideOpen}
-            onChangeSlide={this.handleChangeSlide}
-            onChangeType={this.handleChangeType}
-            onChangeRoom={this.handleChangeRoom}
-            onChangeArea={this.handleChangeArea}
-            onChangeRent={this.handleChangeRent}
-            onChangeDeposit={this.handleChangeDeposit}
-            onChangeTour={this.handleChangeTour}
-            getPlacesCount={this.getPlacesCount}
-            disableTour={numberOFPlaces === 0}
-          />
-        </div>
+  let map;
 
-        <div className={this.getTourControlsClasses()}>
-          <Tour
-            disableRestart={this.state.tourIndex <= 0}
-            disableNext={this.state.tourIndex >= lastIndex}
-            disablePrev={this.state.tourIndex <= 0}
-            onChangeTour={this.handleChangeTour}
-          />
-        </div>
-
-        <div
-          className={this.getPageOverlayClasses()}
-          onClick={() => {
-            this.handleChangePage(false);
-          }}
-        >
-          <Page page={this.state.page} onChangePage={this.handleChangePage} />
-        </div>
-      </div>
-    );
-  }
-
-  handleChangePage = (pageVisible) => {
-    this.setState({ pageVisible });
-  };
-
-  handleChangeSlide = (slideOpen) => {
-    this.setState({ slideOpen });
-  };
-
-  getTourControlsClasses = () => {
-    let classes = "app-tour-controls sc-grid-4";
-
-    if (this.state.tourActive) classes += " is-visible";
-
-    return classes;
-  };
-
-  getPageOverlayClasses = () => {
-    let classes = "app-page-overlay";
-
-    if (this.state.pageVisible) classes += " is-visible";
-
-    return classes;
-  };
-
-  getSlideClasses = () => {
-    let classes = "sc-slide";
-
-    if (this.state.slideOpen) classes += " sc-is-open";
-
-    return classes;
-  };
-
-  getPlacesCount = () => {
-    let features = this.state.places.features;
-
-    return features.length ? features.length : "No";
-  };
-
-  handleFilter = () => {
-    let { types, rooms, areas, rents, deposits } = this.state;
-
-    let filters = [
-      "all",
-      [">=", "area", areas.from],
-      ["<=", "area", areas.to],
-      [">=", "rent", rents.from],
-      ["<=", "rent", rents.to],
-      [">=", "deposit", deposits.from],
-      ["<=", "deposit", deposits.to],
-    ];
-
-    let typesFilter = types
-      .filter((item) => item.checked)
-      .reduce(
-        (total, current) => {
-          total.push(["==", "type", current.slug]);
-
-          return total;
+  // Initialize map when component mounts
+  useEffect(() => {
+    setMyGeoJson([
+      {
+        type: "Feature",
+        properties: {
+          id: "item-95",
+          title: "Lorem ipsum dolor sit amet",
+          excert:
+            "Praesent ullamcorper dui molestie augue hendrerit finibus. Praesent ut ipsum nulla.",
+          description:
+            "Erat velit scelerisque in dictum non consectetur a erat nam. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et. Pretium aenean pharetra magna ac placerat vestibulum lectus. Augue mauris augue neque gravida in fermentum et. Eros in cursus turpis massa tincidunt. Leo in vitae turpis massa sed elementum tempus egestas. Blandit aliquam etiam erat velit scelerisque in dictum non consectetur.",
+          images: [
+            {
+              original: "/assets/images/original/dorm/2/1.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/2/1.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/2/2.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/2/2.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/2/3.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/2/3.jpg",
+            },
+          ],
+          type: "dorm",
+          rooms: 2,
+          area: 94,
+          rent: 20700,
+          deposit: 82000,
         },
-        ["any"]
-      );
-
-    filters.push(typesFilter);
-
-    let roomsFilter = rooms
-      .filter((item) => item.checked)
-      .reduce(
-        (total, current) => {
-          if (current.slug === "one") total.push(["==", "rooms", 1]);
-          if (current.slug === "two") total.push(["==", "rooms", 2]);
-          if (current.slug === "more") total.push([">", "rooms", 2]);
-          if (current.slug === "any") total.push([">=", "rooms", 0]);
-
-          return total;
+        geometry: {
+          type: "Point",
+          coordinates: [5.310258865356445, 60.38377173976387],
         },
-        ["any"]
-      );
+      },
 
-    filters.push(roomsFilter);
+      {
+        type: "Feature",
+        properties: {
+          id: "item-138",
+          title: "Orci varius natoque penatibus",
+          excert:
+            "Praesent ullamcorper dui molestie augue hendrerit finibus. Praesent ut ipsum nulla.",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus in ornare quam viverra orci sagittis eu volutpat. Diam ut venenatis tellus in metus vulputate eu. Quam quisque id diam vel quam elementum pulvinar etiam. Imperdiet massa tincidunt nunc pulvinar. Velit aliquet sagittis id consectetur purus ut. Libero enim sed faucibus turpis in eu mi bibendum. Aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc.",
+          images: [
+            {
+              original: "/assets/images/original/apartment/1/1.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/1/1.jpg",
+            },
+            {
+              original: "/assets/images/original/apartment/1/2.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/1/2.jpg",
+            },
+            {
+              original: "/assets/images/original/apartment/1/3.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/1/3.jpg",
+            },
+          ],
+          type: "apartment",
+          rooms: 2,
+          area: 65,
+          rent: 13200,
+          deposit: 66000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.310602188110352, 60.381502377607916],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-139",
+          title: "Suspendisse gravida turpis",
+          excert:
+            "Orci varius natoque penatibus et magnis dis parturient montes.",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Faucibus in ornare quam viverra orci sagittis eu volutpat. Diam ut venenatis tellus in metus vulputate eu. Quam quisque id diam vel quam elementum pulvinar etiam. Imperdiet massa tincidunt nunc pulvinar. Velit aliquet sagittis id consectetur purus ut. Libero enim sed faucibus turpis in eu mi bibendum. Aliquam malesuada bibendum arcu vitae elementum curabitur vitae nunc.",
+          images: [
+            {
+              original: "/assets/images/original/dorm/1/1.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/1.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/1/2.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/2.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/1/3.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/3.jpg",
+            },
+          ],
+          type: "dorm",
+          rooms: 1,
+          area: 70,
+          rent: 14500,
+          deposit: 43000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.334720611572266, 60.38396261348399],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-140",
+          title: "Orci varius natoque penatibus",
+          excert:
+            "Praesent ullamcorper dui molestie augue hendrerit finibus. Praesent ut ipsum nulla.",
+          description:
+            "Molestie a iaculis at erat pellentesque adipiscing commodo elit at. Diam sit amet nisl suscipit adipiscing. Consectetur adipiscing elit duis tristique sollicitudin. In tellus integer feugiat scelerisque varius. Tortor consequat id porta nibh venenatis cras. Mi sit amet mauris commodo. Tellus orci ac auctor augue mauris augue neque gravida. Non diam phasellus vestibulum lorem sed. Et netus et malesuada fames ac.",
+          images: [
+            {
+              original: "/assets/images/original/dorm/1/1.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/1.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/1/2.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/2.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/1/3.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/3.jpg",
+            },
+          ],
+          type: "dorm",
+          rooms: 2,
+          area: 81,
+          rent: 16500,
+          deposit: 66000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.34184455871582, 60.38934903278175],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-141",
+          title: "Lorem ipsum dolor sit amet",
+          excert:
+            "Orci varius natoque penatibus et magnis dis parturient montes.",
+          description:
+            "Molestie a iaculis at erat pellentesque adipiscing commodo elit at. Diam sit amet nisl suscipit adipiscing. Consectetur adipiscing elit duis tristique sollicitudin. In tellus integer feugiat scelerisque varius. Tortor consequat id porta nibh venenatis cras. Mi sit amet mauris commodo. Tellus orci ac auctor augue mauris augue neque gravida. Non diam phasellus vestibulum lorem sed. Et netus et malesuada fames ac.",
+          images: [
+            {
+              original: "/assets/images/original/dorm/2/1.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/2/1.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/2/2.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/2/2.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/2/3.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/2/3.jpg",
+            },
+          ],
+          type: "dorm",
+          rooms: 1,
+          area: 102,
+          rent: 21900,
+          deposit: 109000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.33111572265625, 60.384429188979546],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-142",
+          title: "Suspendisse gravida turpis",
+          excert:
+            "Suspendisse gravida turpis sed tempor cursus. Donec nec ultrices felis.",
+          description:
+            "Erat velit scelerisque in dictum non consectetur a erat nam. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et. Pretium aenean pharetra magna ac placerat vestibulum lectus. Augue mauris augue neque gravida in fermentum et. Eros in cursus turpis massa tincidunt. Leo in vitae turpis massa sed elementum tempus egestas. Blandit aliquam etiam erat velit scelerisque in dictum non consectetur.",
+          images: [
+            {
+              original: "/assets/images/original/house/1/1.jpg",
+              thumbnail: "/assets/images/thumbnail/house/1/1.jpg",
+            },
+            {
+              original: "/assets/images/original/house/1/2.jpg",
+              thumbnail: "/assets/images/thumbnail/house/1/2.jpg",
+            },
+            {
+              original: "/assets/images/original/house/1/3.jpg",
+              thumbnail: "/assets/images/thumbnail/house/1/3.jpg",
+            },
+          ],
+          type: "house",
+          rooms: 1,
+          area: 31,
+          rent: 6700,
+          deposit: 33000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.3153228759765625, 60.38748297262645],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-143",
+          title: "Donec nec ultrices felis.",
+          excert:
+            "Suspendisse gravida turpis sed tempor cursus. Donec nec ultrices felis.",
+          description:
+            "Erat velit scelerisque in dictum non consectetur a erat nam. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et. Pretium aenean pharetra magna ac placerat vestibulum lectus. Augue mauris augue neque gravida in fermentum et. Eros in cursus turpis massa tincidunt. Leo in vitae turpis massa sed elementum tempus egestas. Blandit aliquam etiam erat velit scelerisque in dictum non consectetur.",
+          images: [
+            {
+              original: "/assets/images/original/house/1/1.jpg",
+              thumbnail: "/assets/images/thumbnail/house/1/1.jpg",
+            },
+            {
+              original: "/assets/images/original/house/1/2.jpg",
+              thumbnail: "/assets/images/thumbnail/house/1/2.jpg",
+            },
+            {
+              original: "/assets/images/original/house/1/3.jpg",
+              thumbnail: "/assets/images/thumbnail/house/1/3.jpg",
+            },
+          ],
+          type: "house",
+          rooms: 2,
+          area: 132,
+          rent: 26400,
+          deposit: 132000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.3249359130859375, 60.409020976546465],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-144",
+          title: "Lorem ipsum dolor sit amet",
+          excert:
+            "Orci varius natoque penatibus et magnis dis parturient montes.",
+          description:
+            "Molestie a iaculis at erat pellentesque adipiscing commodo elit at. Diam sit amet nisl suscipit adipiscing. Consectetur adipiscing elit duis tristique sollicitudin. In tellus integer feugiat scelerisque varius. Tortor consequat id porta nibh venenatis cras. Mi sit amet mauris commodo. Tellus orci ac auctor augue mauris augue neque gravida. Non diam phasellus vestibulum lorem sed. Et netus et malesuada fames ac.",
+          images: [
+            {
+              original: "/assets/images/original/shared/2/1.jpg",
+              thumbnail: "/assets/images/thumbnail/shared/2/1.jpg",
+            },
+            {
+              original: "/assets/images/original/shared/2/2.jpg",
+              thumbnail: "/assets/images/thumbnail/shared/2/2.jpg",
+            },
+            {
+              original: "/assets/images/original/shared/2/3.jpg",
+              thumbnail: "/assets/images/thumbnail/shared/2/3.jpg",
+            },
+          ],
+          type: "shared",
+          rooms: 1,
+          area: 89,
+          rent: 19400,
+          deposit: 58000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.322961807250977, 60.404570392100474],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-145",
+          title: "Lorem ipsum dolor sit amet",
+          excert:
+            "Praesent ullamcorper dui molestie augue hendrerit finibus. Praesent ut ipsum nulla.",
+          description:
+            "Molestie a iaculis at erat pellentesque adipiscing commodo elit at. Diam sit amet nisl suscipit adipiscing. Consectetur adipiscing elit duis tristique sollicitudin. In tellus integer feugiat scelerisque varius. Tortor consequat id porta nibh venenatis cras. Mi sit amet mauris commodo. Tellus orci ac auctor augue mauris augue neque gravida. Non diam phasellus vestibulum lorem sed. Et netus et malesuada fames ac.",
+          images: [
+            {
+              original: "/assets/images/original/apartment/3/1.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/3/1.jpg",
+            },
+            {
+              original: "/assets/images/original/apartment/3/2.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/3/2.jpg",
+            },
+            {
+              original: "/assets/images/original/apartment/3/3.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/3/3.jpg",
+            },
+          ],
+          type: "apartment",
+          rooms: 1,
+          area: 49,
+          rent: 11000,
+          deposit: 44000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.330343246459961, 60.40533339266658],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-146",
+          title: "Suspendisse gravida turpis",
+          excert:
+            "Suspendisse gravida turpis sed tempor cursus. Donec nec ultrices felis.",
+          description:
+            "Erat velit scelerisque in dictum non consectetur a erat nam. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et. Pretium aenean pharetra magna ac placerat vestibulum lectus. Augue mauris augue neque gravida in fermentum et. Eros in cursus turpis massa tincidunt. Leo in vitae turpis massa sed elementum tempus egestas. Blandit aliquam etiam erat velit scelerisque in dictum non consectetur.",
+          images: [
+            {
+              original: "/assets/images/original/apartment/3/1.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/3/1.jpg",
+            },
+            {
+              original: "/assets/images/original/apartment/3/2.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/3/2.jpg",
+            },
+            {
+              original: "/assets/images/original/apartment/3/3.jpg",
+              thumbnail: "/assets/images/thumbnail/apartment/3/3.jpg",
+            },
+          ],
+          type: "apartment",
+          rooms: 0,
+          area: 51,
+          rent: 11400,
+          deposit: 57000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.321760177612305, 60.414403251040255],
+        },
+      },
+      {
+        type: "Feature",
+        properties: {
+          id: "item-147",
+          title: "Orci varius natoque penatibus",
+          excert: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+          description:
+            "Molestie a iaculis at erat pellentesque adipiscing commodo elit at. Diam sit amet nisl suscipit adipiscing. Consectetur adipiscing elit duis tristique sollicitudin. In tellus integer feugiat scelerisque varius. Tortor consequat id porta nibh venenatis cras. Mi sit amet mauris commodo. Tellus orci ac auctor augue mauris augue neque gravida. Non diam phasellus vestibulum lorem sed. Et netus et malesuada fames ac.",
+          images: [
+            {
+              original: "/assets/images/original/dorm/1/1.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/1.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/1/2.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/2.jpg",
+            },
+            {
+              original: "/assets/images/original/dorm/1/3.jpg",
+              thumbnail: "/assets/images/thumbnail/dorm/1/3.jpg",
+            },
+          ],
+          type: "dorm",
+          rooms: 2,
+          area: 67,
+          rent: 14100,
+          deposit: 70000,
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [5.324420928955078, 60.41347095229361],
+        },
+      },
+    ]);
 
-    this.mapcraft.map.setFilter("point-symbol-places", filters);
-  };
+    // Clean up on unmount
+    return () => map.remove();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  handleGeoJson = () => {
-    let { types, rooms, areas, rents, deposits } = this.state;
+  useEffect(() => {
+    handleGeoJson();
+  }, [myGeoJson]);
 
-    let selectedTypes = types
-      .filter((type) => type.checked)
-      .map((type) => type.slug);
+  useEffect(() => {
+    map = new mapboxgl.Map({
+      container: mapContainerRef.current,
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [5, 60],
+      zoom: 5,
+    });
 
-    let selectedRooms = rooms
-      .filter((room) => room.checked)
-      .map((room) => room.slug);
+    // Add navigation control (the +/- zoom buttons)
+    map.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-    let places = { ...this.mapcraft.geoJsons.places };
+    map.on("load", () => {
+      // Load an image from an external URL.
+      map.loadImage(
+        `${baseUrl}assets/images/icon-house.png`,
+        (error, image) => {
+          if (error) throw error;
+          map.addImage("house", image);
 
-    let features = places.features.filter((feature) => {
-      let { type, rooms, area, rent, deposit } = feature.properties;
+          map.loadImage(
+            `${baseUrl}assets/images/icon-apartment.png`,
+            (error, image) => {
+              if (error) throw error;
+              map.addImage("apartment", image);
 
-      if (
-        selectedTypes.includes(type) &&
-        area >= areas.from &&
-        area <= areas.to &&
-        rent >= rents.from &&
-        rent <= rents.to &&
-        deposit >= deposits.from &&
-        deposit <= deposits.to
-      ) {
-        if (
-          (rooms === 1 && selectedRooms.includes("one")) ||
-          (rooms === 2 && selectedRooms.includes("two")) ||
-          (rooms > 2 && selectedRooms.includes("more")) ||
-          selectedRooms.includes("any")
-        ) {
-          return true;
+              map.loadImage(
+                `${baseUrl}assets/images/icon-shared.png`,
+                (error, image) => {
+                  if (error) throw error;
+                  map.addImage("shared", image);
+
+                  map.loadImage(
+                    `${baseUrl}assets/images/icon-dorm.png`,
+                    (error, image) => {
+                      if (error) throw error;
+                      map.addImage("dorm", image);
+
+                      // Add a data source containing one point feature.
+                      map.addSource("point", {
+                        type: "geojson",
+                        data: {
+                          type: "FeatureCollection",
+                          features: newGeoJson,
+                        },
+                      });
+
+                      // Add a layer to use the image to represent the data.
+                      map.addLayer({
+                        id: "points",
+                        type: "symbol",
+                        source: "point", // reference the data source
+                        layout: {
+                          "icon-image": ["get", "type"],
+                          "icon-size": 1,
+                        },
+                      });
+                    }
+                  );
+                }
+              );
+            }
+          );
         }
+      );
+    });
+
+    map.on("click", "points", (event) => {
+      // Copy coordinates array.
+      let properties = event.features[0].properties;
+      let coordinates = event.features[0].geometry.coordinates.slice();
+
+      // Ensure that if the map is zoomed out such that multiple
+      // copies of the feature are visible, the popup appears
+      // over the copy being pointed to.
+      while (Math.abs(event.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += event.lngLat.lng > coordinates[0] ? 360 : -360;
       }
 
-      return false;
-    });
+      if (typeof properties.images !== "object")
+        properties.images = JSON.parse(properties.images);
 
-    places.features = features;
+      properties.typeName = types.filter(
+        (t) => t.slug === properties.type
+      )[0].name;
 
-    this.setState({ places });
+      let { title, images, excert, typeName, rooms, area, rent, deposit } =
+        properties;
 
-    if (places.features.length)
-      this.mapcraft.fitBounds({
-        geoJson: places,
-      });
-  };
-
-  handleChangeType = (event) => {
-    let slug = event.target.getAttribute("data-type");
-    let types = [...this.state.types].map((type) => {
-      if (type.slug === slug) type.checked = event.target.checked;
-
-      return type;
-    });
-
-    this.setState({ types });
-
-    this.handleChangeTour("end-tour");
-    this.handleFilter();
-    this.handleGeoJson();
-  };
-
-  handleChangeRoom = (event) => {
-    let slug = event.target.getAttribute("data-room");
-    let rooms = [...this.state.rooms].map((room) => {
-      room.checked = room.slug === slug ? true : false;
-
-      return room;
-    });
-
-    this.setState({ rooms });
-
-    this.handleChangeTour("end-tour");
-    this.handleFilter();
-    this.handleGeoJson();
-  };
-
-  handleChangeArea = (value) => {
-    let areas = { ...this.state.areas };
-
-    areas.from = value.min;
-    areas.to = value.max;
-
-    this.setState({ areas });
-
-    this.handleChangeTour("end-tour");
-    this.handleFilter();
-    this.handleGeoJson();
-  };
-
-  handleChangeRent = (value) => {
-    let rents = { ...this.state.rents };
-
-    rents.from = value.min;
-    rents.to = value.max;
-
-    this.setState({ rents });
-
-    this.handleChangeTour("end-tour");
-    this.handleFilter();
-    this.handleGeoJson();
-  };
-
-  handleChangeDeposit = (value) => {
-    let deposits = { ...this.state.deposits };
-
-    deposits.from = value.min;
-    deposits.to = value.max;
-
-    this.setState({ deposits });
-
-    this.handleChangeTour("end-tour");
-    this.handleFilter();
-    this.handleGeoJson();
-  };
-
-  handleChangeTour = (action) => {
-    let features = this.state.places.features;
-    let lastIndex = features.length - 1;
-    let tourActive = this.state.tourActive;
-    let tourIndex = this.state.tourIndex;
-
-    this.handleChangeSlide(false);
-
-    if (action === "start-tour") {
-      tourActive = true;
-
-      tourIndex = 0;
-    }
-
-    if (action === "end-tour") {
-      tourActive = false;
-
-      tourIndex = 0;
-
-      this.mapcraft.closePopup();
-
-      this.handleChangeSlide(true);
-    }
-
-    if (action === "restart") tourIndex = 0;
-
-    if (action === "next" && tourIndex < lastIndex) tourIndex += 1;
-
-    if (action === "prev" && tourIndex > 0) tourIndex -= 1;
-
-    if (tourActive) {
-      let feature = features[tourIndex];
-
-      let lnglat = {
-        lng: feature.geometry.coordinates[0],
-        lat: feature.geometry.coordinates[1],
-      };
-
-      this.mapcraft.flyTo({
-        lnglat: lnglat,
-        zoom: 15,
-      });
-
-      this.openPopup(feature.properties, lnglat);
-    }
-
-    this.setState({ tourActive, tourIndex });
-  };
-
-  InitializeMap = () => {
-    this.mapcraft = new Mapcraft({
-      env: {
-        mapbox: {
-          token:
-            "pk.eyJ1IjoiYXlkaW5naGFuZSIsImEiOiJjazJpcXB1Zm8xamNvM21sNjlsMG95ejY3In0.jMuteEFuzviEuitJZ-DY2w",
-        },
-      },
-      styles: {
-        light: "mapbox://styles/mapbox/streets-v11",
-      },
-      map: {
-        container: "app-map",
-        center: [5, 60],
-        zoom: 5,
-        pitch: 50,
-        bearing: 0,
-        hash: false,
-      },
-      controls: {
-        fullscreen: false,
-        geolocation: false,
-        navigation: true,
-      },
-      icons: {
-        house: "./assets/images/icon-house.png",
-        apartment: "./assets/images/icon-apartment.png",
-        shared: "./assets/images/icon-shared.png",
-        dorm: "./assets/images/icon-dorm.png",
-      },
-      geoJsons: {
-        places: "./data/places.json",
-      },
-    });
-
-    this.mapcraft.load().then(() => {
-      this.handleFilter();
-
-      setTimeout(() => {
-        this.handleGeoJson();
-      }, 2000);
-
-      setTimeout(() => {
-        this.handleChangeSlide(true);
-      }, 5000);
-
-      this.mapcraft.map.on("click", "point-symbol-places", (event) => {
-        let properties = event.features[0].properties;
-        let coordinates = event.features[0].geometry.coordinates.slice();
-
-        while (Math.abs(event.lngLat.lng - coordinates[0]) > 180) {
-          coordinates[0] += event.lngLat.lng > coordinates[0] ? 360 : -360;
-        }
-
-        this.openPopup(properties, coordinates);
-      });
-    });
-  };
-
-  openPopup = (properties, lnglat) => {
-    if (typeof properties.images !== "object")
-      properties.images = JSON.parse(properties.images);
-
-    properties.typeName = this.state.types.filter(
-      (t) => t.slug === properties.type
-    )[0].name;
-
-    let { title, images, excert, typeName, rooms, area, rent, deposit } =
-      properties;
-
-    let html = `<div class="sc-card sc-borderless">
+      let html = `<div class="sc-card sc-borderless">
       <div class="sc-card-header">
         <h5 class="app-page-trigger">${title}</h5>
       </div>
@@ -475,22 +584,183 @@ class Map extends Component {
       <div class="sc-card-footer">${excert}</div>
     </div>`;
 
-    this.mapcraft.openPopup({
-      lnglat: lnglat,
-      html: html,
-    });
+      new mapboxgl.Popup().setLngLat(coordinates).setHTML(html).addTo(map);
 
-    let pageInfo = { ...properties };
-    pageInfo.coordinates = lnglat;
-    console.log(document.querySelectorAll(".app-page-trigger"));
-    document.querySelectorAll(".app-page-trigger").forEach((element) => {
-      element.addEventListener("click", () => {
-        this.handleChangePage(true);
+      let pageInfo = { ...properties };
+      pageInfo.coordinates = coordinates;
 
-        this.setState({ page: pageInfo });
+      document.querySelectorAll(".app-page-trigger").forEach((element) => {
+        element.addEventListener("click", () => {
+          handleChangePage(true);
+          setPage(pageInfo);
+        });
       });
     });
+
+    map.on("mouseenter", "points", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+
+    // Change it back to a pointer when it leaves.
+    map.on("mouseleave", "points", () => {
+      map.getCanvas().style.cursor = "";
+    });
+
+    if (newGeoJson.length) {
+      let bound=[]
+      newGeoJson.map((place) => bound.push(place.geometry.coordinates));
+      map.fitBounds(bound);
+    }
+  }, [newGeoJson]);
+
+  const getSlideClasses = () => {
+    let classes = "sc-slide";
+    if (slideOpen) classes += " sc-is-open";
+    return classes;
   };
-}
+
+  const handleChangeSlide = (slideOpen) => {
+    setSlideOpen(slideOpen);
+  };
+
+  const handleChangePage = (pageVisible) => {
+    setPageVisible(pageVisible);
+  };
+
+  const getPageOverlayClasses = () => {
+    let classes = "app-page-overlay";
+
+    if (pageVisible) classes += " is-visible";
+
+    return classes;
+  };
+
+  const getPlacesCount = () => {
+    return newGeoJson.length ? newGeoJson.length : "No";
+  };
+
+  const handleGeoJson = () => {
+    let selectedTypes = types
+      .filter((type) => type.checked)
+      .map((type) => type.slug);
+
+    let selectedRooms = rooms
+      .filter((room) => room.checked)
+      .map((room) => room.slug);
+
+    let features = myGeoJson.filter((feature) => {
+      let { type, rooms, area, rent, deposit } = feature.properties;
+
+      if (
+        selectedTypes.includes(type) &&
+        area >= areas.from &&
+        area <= areas.to &&
+        rent >= rents.from &&
+        rent <= rents.to &&
+        deposit >= deposits.from &&
+        deposit <= deposits.to
+      ) {
+        if (
+          (rooms === 1 && selectedRooms.includes("one")) ||
+          (rooms === 2 && selectedRooms.includes("two")) ||
+          (rooms > 2 && selectedRooms.includes("more")) ||
+          selectedRooms.includes("any")
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    });
+
+    setNewGeoJson(features);
+    // if (myGeoJson.length)
+    //   this.mapcraft.fitBounds({
+    //     geoJson: places,
+    //   });
+  };
+
+  const handleChangeType = (event) => {
+    let slug = event.target.getAttribute("data-type");
+    let newTypes = types.map((type) => {
+      if (type.slug === slug) type.checked = event.target.checked;
+
+      return type;
+    });
+
+    setTypes(newTypes);
+    handleGeoJson();
+  };
+
+  const handleChangeRoom = (event) => {
+    let slug = event.target.getAttribute("data-room");
+    let newRooms = rooms.map((room) => {
+      room.checked = room.slug === slug ? true : false;
+
+      return room;
+    });
+
+    setRooms(newRooms);
+    handleGeoJson();
+  };
+
+  const handleChangeArea = (value) => {
+    areas.from = value.min;
+    areas.to = value.max;
+
+    setAreas(areas);
+    handleGeoJson();
+  };
+
+  const handleChangeRent = (value) => {
+    rents.from = value.min;
+    rents.to = value.max;
+
+    setRents(rents);
+    handleGeoJson();
+  };
+
+  const handleChangeDeposit = (value) => {
+    deposits.from = value.min;
+    deposits.to = value.max;
+
+    setDeposits(deposits);
+    handleGeoJson();
+  };
+
+  console.log(pageVisible);
+
+  return (
+    <div style={{ position: "relative", height: "92%" }}>
+      <div className="map-container" ref={mapContainerRef} />
+
+      <div className={getSlideClasses()} style={{ position: "absolute" }}>
+        <Search
+          types={types}
+          rooms={rooms}
+          areas={areas}
+          rents={rents}
+          deposits={deposits}
+          slideOpen={slideOpen}
+          onChangeSlide={handleChangeSlide}
+          onChangeType={handleChangeType}
+          onChangeRoom={handleChangeRoom}
+          onChangeArea={handleChangeArea}
+          onChangeRent={handleChangeRent}
+          onChangeDeposit={handleChangeDeposit}
+          getPlacesCount={getPlacesCount}
+        />
+      </div>
+      <div
+        className={getPageOverlayClasses()}
+        onClick={() => {
+          handleChangePage(false);
+        }}
+      >
+        <Page page={page} onChangePage={handleChangePage} />
+      </div>
+    </div>
+  );
+};
 
 export default Map;

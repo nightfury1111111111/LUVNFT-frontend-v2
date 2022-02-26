@@ -137,21 +137,6 @@ class Sreach extends Component {
 
         <footer className="sc-slide-footer">
           <h6>{getPlacesCount()} results found.</h6>
-
-          <div className="sc-form-group sc-grid-1">
-            <div className="sc-form-button sc-stretched">
-              <button
-                disabled={disableTour}
-                onClick={() => {
-                  onChangeTour("start-tour");
-                }}
-              >
-                <i className="sc-icon-route"></i>
-
-                <span>TOUR THROUGH THE RESULTS</span>
-              </button>
-            </div>
-          </div>
         </footer>
       </React.Fragment>
     );

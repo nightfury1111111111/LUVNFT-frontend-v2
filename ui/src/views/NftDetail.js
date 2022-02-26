@@ -615,7 +615,7 @@ export default function NftDetail() {
 
   const BuyNftBtn = () => (
     <button
-      className="bg-blue-500 text-white font-semibold hover:shadow-lg rounded p-2 w-full disabled:opacity-50"
+      className="bg-black text-white font-semibold hover:shadow-lg rounded p-2 w-full disabled:opacity-50"
       disabled={loading}
       onClick={() => buyNft(nftObj)}
     >
@@ -899,29 +899,29 @@ export default function NftDetail() {
                       </div>
                     </div>
                     <DetailInfoWrapper>
-                      <InfoWrapper>🏁{nftObj.excert}</InfoWrapper>
+                      <InfoWrapper>🏁 {nftObj.excert}</InfoWrapper>
                       <InfoWrapper>
-                        LAT:{Number(nftObj.latitude).toFixed(4)} N, LONG:{" "}
+                        📍 LAT:{Number(nftObj.latitude).toFixed(4)} N, LONG:{" "}
                         {Number(nftObj.longitude).toFixed(4)} E
                       </InfoWrapper>
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
-                      <InfoWrapper>💙NFT ESTATE: {nftObj.type}</InfoWrapper>
-                      <InfoWrapper>🆔ID:{nftObj.tokenId}</InfoWrapper>
+                      <InfoWrapper>💙 NFT ESTATE: {nftObj.type}</InfoWrapper>
+                      <InfoWrapper>🆔 ID:{nftObj.tokenId}</InfoWrapper>
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
-                      <InfoWrapper>STtatus:{nftObj.status}</InfoWrapper>
+                      <InfoWrapper>💼 STtatus:{nftObj.status}</InfoWrapper>
                       <InfoWrapper>
-                        💰Owned by: {getCompressed(nftObj.owner)}
+                        💰 Owned by: {getCompressed(nftObj.owner)}
                       </InfoWrapper>
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
                       <InfoWrapper>One:{nftObj.price}</InfoWrapper>
-                      <InfoWrapper>USD: {nftObj.price * 2.2}</InfoWrapper>
+                      <InfoWrapper>💵 USD: {nftObj.price * 2.2}</InfoWrapper>
                     </DetailInfoWrapper>
                     <DetailInfoWrapper>
                       <InfoWrapper>
-                        ⏰Auction Ends:
+                        ⏰ Auction Ends:
                         <span style={styles.auctionTimeNumber}>0</span>
                         <span style={styles.auctionTimeDesc}>d&nbsp;</span>
                         <span style={styles.auctionTimeNumber}>
@@ -938,7 +938,7 @@ export default function NftDetail() {
                         <span style={styles.auctionTimeDesc}>s&nbsp;</span>
                       </InfoWrapper>
                       <InfoWrapper>
-                        Highest Bid:{" "}
+                        💸 Highest Bid:{" "}
                         <span style={styles.auctionTimeNumber}>
                           {auctionObj &&
                             auctionObj.highestBid &&
